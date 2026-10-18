@@ -658,6 +658,21 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
 @media(max-width:650px){.study-picker label{flex:1 1 160px}.study-picker select{width:100%;min-width:0}}
 #keywordProfileModal[hidden],#keywordListModal[hidden]{display:none!important}
 .keyword-entry{padding:10px 4px;border-bottom:1px solid #e9edf5;display:flex;align-items:center;justify-content:space-between;gap:12px}.keyword-entry-title{font-size:13px;font-weight:600;overflow-wrap:anywhere}.keyword-entry-subtitle{font-size:12px;color:var(--sub);overflow-wrap:anywhere}.keyword-entry-actions{display:flex;gap:6px;flex-shrink:0}.keyword-entry-actions .btn{white-space:nowrap}.keyword-entry-empty{color:var(--sub);font-size:13px;padding:18px 0}
+
+/* Small, scoped UI adjustments: current input mode and identical highlighted keyword styling */
+#contentMaskBtn.keyword-mode-active,#extraMaskBtn.keyword-mode-active{
+ background:#b8ebca!important;border-color:#8fd5ae!important;color:#09613b!important;
+ box-shadow:inset 0 0 0 1px rgba(30,135,45,.12)!important;
+}
+#contentMaskBtn.keyword-mode-active:hover,#extraMaskBtn.keyword-mode-active:hover{background:#a8e6c3!important;}
+.extra-mark-editor mark.editor-mark{
+ background:#dbf6e7!important;color:#17794f!important;font-weight:850!important;
+ border-radius:3px!important;padding:1px 0!important;
+ border-bottom:1.5px solid #4fa778!important;
+ box-decoration-break:clone!important;cursor:context-menu!important;
+}
+.extra-mark-editor mark.editor-mark:hover{background:#b6efd0!important;}
+.extra-criterion-code{display:block;margin:0 0 8px;font-size:12px;font-weight:750;color:#526284;letter-spacing:.01em;}
 </style></head><body>
 <nav class="mode-switch" id="modeSwitch" aria-label="학습 모드 선택"><a class="brand" id="brandHome" href="#contents" aria-label="정보과 교육과정 처음 화면으로 이동">정보과 교육과정</a>
 <button type="button" id="modeContent" class="active">내용체계표 공부</button>
@@ -729,7 +744,7 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
     <main class="main table-main" id="contentMain">
       <div class="table-toolbar" id="contentToolbar">
         <div class="table-heading"><h2 id="contentUnitHeading">중학교 정보 - 1단원</h2><p id="contentUnitDesc" class="table-subtitle">원문 개수대로 입력하고 바로 아래에서 정답을 확인하세요.</p></div>
-        <div class="table-tools"><button type="button" class="btn toggle-toc" id="contentTocBtn">☰ 목차</button><button type="button" class="btn nav-button" id="contentPrevUnitTop">← 이전 단원</button><button type="button" class="btn nav-button" id="contentNextUnitTop">다음 단원 →</button><button type="button" class="btn" id="contentSettingsOpen">⚙ 설정</button><button type="button" class="btn" id="contentReferenceBtn">▤ 성취기준 원문</button><button type="button" class="btn table-fullscreen" id="contentFocusBtn">⛶ 전체화면</button></div>
+        <div class="table-tools"><button type="button" class="btn toggle-toc" id="contentTocBtn">☰ 목차</button><button type="button" class="btn nav-button" id="contentPrevUnitTop">← 이전 단원</button><button type="button" class="btn nav-button" id="contentNextUnitTop">다음 단원 →</button><button type="button" class="btn" id="contentSettingsOpen">⚙ 키워드설정</button><button type="button" class="btn" id="contentReferenceBtn">▤ 성취기준 원문</button><button type="button" class="btn table-fullscreen" id="contentFocusBtn">⛶ 전체화면</button></div>
       </div>
       <div class="study-picker" id="contentStudyPicker" aria-label="내용체계표 과목·단원 바로 이동">
         <label>과목 <select id="contentStudyCourse"></select></label>
@@ -756,9 +771,9 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
   <button type="button" class="fullscreen-edge left" id="fullPrevEdge" aria-label="이전 단원"><span>‹</span></button><button type="button" class="fullscreen-edge right" id="fullNextEdge" aria-label="다음 단원"><span>›</span></button>
   <div id="contentSettingsOverlay" class="editor-overlay" role="dialog" aria-modal="true" aria-label="단원별 키워드 편집" hidden>
     <div class="editor-head"><div><strong>⚙ 키워드 설정</strong><p>문장을 드래그해 지정하고, 강조된 키워드를 우클릭해 해제하세요.</p></div><button type="button" class="btn" id="contentSettingsClose">✕ 닫기</button></div>
-    <div class="editor-bar"><label>과목 <select id="contentEditCourse"></select></label><label>단원 <select id="contentEditUnit"></select></label><button type="button" class="btn" id="contentMyRegister">키워드 등록</button><button type="button" class="btn" id="contentMyApply">키워드 목록</button><button type="button" class="btn" id="contentCurrentKeywordList">현재 키워드 목록</button><button type="button" class="btn" id="contentResetKeywords">기본 키워드 세팅</button></div>
+    <div class="editor-bar"><label>과목 <select id="contentEditCourse"></select></label><label>단원 <select id="contentEditUnit"></select></label><button type="button" class="btn" id="contentMyRegister">키워드 등록</button><button type="button" class="btn" id="contentMyApply">키워드 목록</button><button type="button" class="btn" id="contentResetKeywords">기본 키워드 세팅</button></div>
     <div class="editor-steps"><div class="group"><span class="nav-label">단원</span><button class="btn" id="editorPrevUnit" type="button">← 이전 단원</button><button class="btn" id="editorNextUnit" type="button">다음 단원 →</button></div><span class="splitter"></span><div class="group"><span class="nav-label">과목</span><button class="btn" id="editorPrevCourse" type="button">← 이전 과목</button><button class="btn" id="editorNextCourse" type="button">다음 과목 →</button></div><span class="keyboard-chip"><kbd>←</kbd><kbd>→</kbd> 단원 이동</span></div>
-    <p class="editor-tip">키워드로 지정할 문장을 드래그하세요. <b>초록색 단어에서 우클릭하면 해제</b>됩니다. 단원명과 지식·이해는 전체 문구를 채점합니다.</p>
+    <p class="editor-tip">키워드로 지정할 문장을 드래그하세요. <b>초록색 단어에서 우클릭하면 해제</b>됩니다. 단원명과 지식·이해도 키워드를 드래그해 변경할 수 있습니다. 기본 키워드는 문장 전체입니다.</p>
     <div class="editor-table" id="contentEditorTable"></div>
   </div>
 </div>
@@ -766,13 +781,13 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
 <div id="tocBackdrop" class="toc-backdrop" aria-hidden="true"></div><div id="referenceShade" class="reference-shade"></div>
 <div id="extraPage" class="hidden">
  <div class="extra-topline"><div><div id="extraModeLabel" class="extra-mode-meta">성취기준 공부</div><h1 id="extraTitle">중학교 정보 · 1단원</h1><div id="extraChapterName" class="extra-chapter"></div></div>
-  <div class="extra-controls"><button id="extraTocBtn" type="button">☰ 목차</button><button id="extraPrevBtn" type="button">← 이전 단원</button><button id="extraNextBtn" type="button">다음 단원 →</button><button id="extraRevealBtn" type="button">전체 정답 확인</button><button id="extraMaskBtn" type="button">키워드만 미공개</button><button id="extraEditBtn" type="button">⚙ 키워드 설정</button><button id="extraStartSource" type="button">원문 보기</button><button id="extraFull" class="accent" type="button">⛶ 전체화면</button></div>
+  <div class="extra-controls"><button id="extraTocBtn" type="button">☰ 목차</button><button id="extraPrevBtn" type="button">← 이전 단원</button><button id="extraNextBtn" type="button">다음 단원 →</button><button id="extraRevealBtn" type="button">전체 정답 확인</button><button id="extraMaskBtn" type="button">키워드입력</button><button id="extraEditBtn" type="button">⚙ 키워드 설정</button><button id="extraStartSource" type="button">원문 보기</button><button id="extraFull" class="accent" type="button">⛶ 전체화면</button></div>
  </div>
  <div class="study-picker" id="extraStudyPicker" hidden aria-label="성취기준 과목·단원 바로 이동">
    <label>과목 <select id="extraStudyCourse"></select></label>
    <label>단원 <select id="extraStudyUnit"></select></label>
  </div>
- <div id="extraBatchBar" class="editor-bar" hidden><label>과목 <select id="extraBatchCourse"></select></label><label>단원 <select id="extraBatchUnit"></select></label><button type="button" class="btn" id="extraMyRegister">키워드 등록</button><button type="button" class="btn" id="extraMyApply">키워드 목록</button><button type="button" class="btn" id="extraCurrentKeywordList">현재 키워드 목록</button><button type="button" class="btn" id="extraResetKeywords">기본 키워드 세팅</button></div><div class="extra-editor-help" id="extraEditorHelp" hidden>원문에서 원하는 문구를 드래그하면 키워드가 됩니다. 초록색 표시 위에서 우클릭하면 해제됩니다. 설정은 이 브라우저에만 저장됩니다.</div>
+ <div id="extraBatchBar" class="editor-bar" hidden><label>과목 <select id="extraBatchCourse"></select></label><label>단원 <select id="extraBatchUnit"></select></label><button type="button" class="btn" id="extraMyRegister">키워드 등록</button><button type="button" class="btn" id="extraMyApply">키워드 목록</button><button type="button" class="btn" id="extraResetKeywords">기본 키워드 세팅</button></div><div class="extra-editor-help" id="extraEditorHelp" hidden>원문에서 원하는 문구를 드래그하면 키워드가 됩니다. 초록색 표시 위에서 우클릭하면 해제됩니다. 설정은 이 브라우저에만 저장됩니다.</div>
  <div class="extra-paper"><div class="extra-paper-header"><h2 id="extraFocusTitle">중학교 정보 · 1단원</h2></div><div id="extraTable"></div></div>
  <div class="extra-nav-bottom"><div><label>단원</label><button type="button" id="extraPrevBtnBottom" onclick="extraChange(-1)">← 이전 단원</button><button type="button" id="extraNextBtnBottom" onclick="extraChange(1)">다음 단원 →</button></div><div><label>과목</label><button type="button" id="extraPrevCourse">← 이전 과목</button><button type="button" id="extraNextCourse">다음 과목 →</button><button type="button" id="extraReset">다시 풀기</button></div></div>
  <button id="extraEdgeLeft" type="button" class="extra-full-edge left" title="이전 단원">‹</button><button id="extraEdgeRight" type="button" class="extra-full-edge right" title="다음 단원">›</button>
@@ -994,7 +1009,7 @@ try{const saved=JSON.parse(localStorage.getItem(CONTENT_EDIT_STORAGE)||'{}');if(
 function contentSaveCustom(){try{localStorage.setItem(CONTENT_EDIT_STORAGE,JSON.stringify(contentCustomKeywords));}catch(e){}}
 function contentDefaultRanges(raw){const ranges=[];let p=0;for(const piece of raw.split(/(~[^~]+~)/g).filter(Boolean)){if(piece.startsWith('~')&&piece.endsWith('~')){const term=piece.slice(1,-1);ranges.push([p,p+term.length]);p+=term.length;}else p+=piece.length;}return ranges;}
 function contentRangeKey(qid,c=contentState.course,u=contentState.unit){return contentId(c,u,qid);}
-function contentRanges(qid,raw,c=contentState.course,u=contentState.unit){const key=contentRangeKey(qid,c,u);return Object.prototype.hasOwnProperty.call(contentCustomKeywords,key)?contentCustomKeywords[key]:contentDefaultRanges(raw);}
+function contentRanges(qid,raw,c=contentState.course,u=contentState.unit){const key=contentRangeKey(qid,c,u);if(Object.prototype.hasOwnProperty.call(contentCustomKeywords,key))return contentCustomKeywords[key];const currentUnit=contentUnitsOf(c)[u];const knowledgeStart=1+currentUnit.I.length;const isWholeSentence=qid===0||(qid>=knowledgeStart&&qid<knowledgeStart+currentUnit.K.length);return isWholeSentence?[[0,contentText(raw).length]]:contentDefaultRanges(raw);}
 function contentTextSegments(qid,raw){const text=contentText(raw);return contentRanges(qid,raw).filter(r=>r[0]>=0&&r[1]<=text.length&&r[1]>r[0]).sort((a,b)=>a[0]-b[0]);}
 function contentClean(s){return String(s).normalize('NFKC').toLocaleLowerCase('ko').replace(/[\s\p{P}\p{S}]/gu,'');}
 function contentKeywordStrings(qid,raw){const text=contentText(raw);return [...new Set(contentTextSegments(qid,raw).map(r=>text.slice(r[0],r[1])).filter(Boolean))];}
@@ -1133,7 +1148,7 @@ function contentRenderFullButton(){const fullscreen=document.fullscreenElement==
 function contentExitFocus(){document.body.classList.remove('content-focus-mode');contentRenderFullButton();}
 contentEl('modeStandards').addEventListener('click',()=>openMode('standards'));
 contentEl('modeContent').addEventListener('click',()=>openMode('contents'));
-contentEl('brandHome').addEventListener('click',e=>{e.preventDefault();contentState.course=0;contentState.unit=0;contentMask=false;contentRevealAll=false;contentMaskResponses={};const settings=contentEl('contentSettingsOverlay');if(settings)settings.hidden=true;const maskButton=contentEl('contentMaskBtn');if(maskButton)maskButton.textContent='키워드만 미공개';const revealButton=contentEl('contentRevealBtn');if(revealButton)revealButton.textContent='전체 정답 확인';document.body.classList.remove('content-toc-open','standard-toc-open','extra-toc-open','extra-fallback-focus','editor-active');openMode('contents');});
+contentEl('brandHome').addEventListener('click',e=>{e.preventDefault();contentState.course=0;contentState.unit=0;contentMask=true;contentRevealAll=false;contentMaskResponses={};const settings=contentEl('contentSettingsOverlay');if(settings)settings.hidden=true;const maskButton=contentEl('contentMaskBtn');if(maskButton){maskButton.textContent='키워드입력';maskButton.classList.add('keyword-mode-active');maskButton.setAttribute('aria-pressed','true');}const revealButton=contentEl('contentRevealBtn');if(revealButton)revealButton.textContent='전체 정답 확인';document.body.classList.remove('content-toc-open','standard-toc-open','extra-toc-open','extra-fallback-focus','editor-active');openMode('contents');});
 contentEl('contentSideGo').addEventListener('click',()=>openMode('contents'));
 contentEl('contentSideBack').addEventListener('click',()=>openMode('standards'));
 contentEl('contentFocusBtn').addEventListener('click',async()=>{
@@ -1226,15 +1241,12 @@ function contentEditorRender(){
   const stack=document.createElement('div');stack.className='editor-stack';
   for(const q of sub){const id=k++,box=document.createElement('div');box.className='editor-item';
    const display=document.createElement('div');display.className='editor-sentence';display.dataset.qid=String(id);display.innerHTML=contentEditorMarkHTML(id,q.raw);
-   if(type==='I'||type==='P'||type==='V'){
+   if(CONTENT_TYPES.includes(type)){
     display.classList.add('editor-selectable');display.title='드래그로 키워드 지정, 강조된 키워드를 우클릭하면 해제';
     display.addEventListener('mouseup',()=>{if(contentEditorAddSelection(display)){display.dataset.selected='yes';setTimeout(()=>{delete display.dataset.selected;},40);}});
     display.addEventListener('touchend',()=>{/* 모바일은 선택 뒤 오른쪽 버튼으로 지정할 수도 있음 */});
 
-    const markButton=document.createElement('button');markButton.type='button';markButton.className='editor-mark-btn';markButton.textContent='드래그 선택 추가';markButton.title='위 문장에서 선택된 구간을 키워드로 추가';
-    markButton.addEventListener('pointerdown',e=>e.preventDefault()); // keep mouse selection
-    markButton.addEventListener('click',()=>{if(!contentEditorAddSelection(display)){markButton.textContent='문장을 먼저 드래그하세요';setTimeout(()=>{markButton.textContent='드래그 선택 추가';},1100);}});
-    box.append(display,markButton);
+    box.append(display);
    }else{box.append(display);}
    stack.append(box);
   }
@@ -1245,7 +1257,7 @@ function contentEditorPopulateUnits(){
  const select=contentEl('contentEditUnit');select.replaceChildren();
  const all=document.createElement('option');all.value='-1';all.textContent='전체 단원';select.append(all);
  if(CONTENT_EDIT_STATE.scopeCourse!==-1){
-  contentUnitsOf(CONTENT_EDIT_STATE.course).forEach((u,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${i+1}단원 · ${u.name}`;select.append(o)});
+  contentUnitsOf(CONTENT_EDIT_STATE.course).forEach((u,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${i+1}단원`;select.append(o)});
  }
  select.value=String(CONTENT_EDIT_STATE.scopeUnit);
 }
@@ -1415,8 +1427,8 @@ try{personalityTexts=JSON.parse(localStorage.getItem(EXTRA_USER_TEXT)||'{}')||{}
 const eGet=id=>document.getElementById(id);
 const eEsc=contentEscape;
 const eNorm=contentClean;
-const extra={mode:'standardsStudy',course:0,unit:0,mask:false,showSource:false,edit:false,answers:{},drafts:{},editing:null};
-let contentMask=false;let contentMaskResponses={};let extraRevealAll=false;let contentRevealAll=false;
+const extra={mode:'standardsStudy',course:0,unit:0,mask:true,showSource:false,edit:false,answers:{},drafts:{},editing:null};
+let contentMask=true;let contentMaskResponses={};let extraRevealAll=false;let contentRevealAll=false;
 function rangeDefault(text){
   // The additional PDF has no colored highlight markings. Set adjustable starter keywords.
   const ignore=new Set(['그러나','위하여','그리고','활용하여','제시한다','적용한다','수있도록','문제를','이해하고','때문에','하므로','수있어야','있도록','평가하도록','하도록','따라','있다','한다','필요한']);
@@ -1456,7 +1468,7 @@ function extraChangeCourse(delta){const c=extra.course+delta;if(c<0||c>=CONTENT_
 function extraSelectCourse(c){extra.course=c;extra.unit=0;renderExtra();closeExtraToc()}
 function extraSelectUnit(u){extra.unit=u;renderExtra();closeExtraToc()}
 function openExtra(mode){
- extra.mode=mode;extra.unit=0;extra.edit=false;extra.mask=false;extra.showSource=false;
+ extra.mode=mode;extra.unit=0;extra.edit=false;extra.mask=true;extra.showSource=false;
  eGet('standardsPage').classList.add('hidden');eGet('contentPage').classList.add('hidden');eGet('extraPage').classList.remove('hidden');
  syncActiveStudyMenu(mode);
  document.body.classList.remove('focus-mode','content-focus-mode');closeExtraToc();
@@ -1472,7 +1484,7 @@ function renderExtraNavigation(){
 function rangesMarkup(text,ranges,renderSegment){let out='',p=0;const ordered=ranges.slice().sort((a,b)=>a[0]-b[0]);for(let i=0;i<ordered.length;i++){const [s,e]=ordered[i];if(s<p||e<=s||e>text.length)continue;out+=eEsc(text.slice(p,s))+renderSegment(text.slice(s,e),i);p=e}return out+eEsc(text.slice(p))}
 function editableSelection(target){const sel=window.getSelection();if(!sel||sel.isCollapsed||!sel.rangeCount)return null;const r=sel.getRangeAt(0);if(!target.contains(r.startContainer)||!target.contains(r.endContainer))return null;const a=document.createRange();a.selectNodeContents(target);a.setEnd(r.startContainer,r.startOffset);const b=document.createRange();b.selectNodeContents(target);b.setEnd(r.endContainer,r.endOffset);const st=a.toString().length,en=b.toString().length;return st<en?[st,en]:null;}
 function saveExtraRange(id,text,ranges){const valid=ranges.filter(v=>v[1]>v[0]&&v[0]>=0&&v[1]<=text.length).sort((a,b)=>a[0]-b[0]);const merged=[];valid.forEach(([a,b])=>{const prev=merged.at(-1);if(prev&&a<prev[1])prev[1]=Math.max(b,prev[1]);else merged.push([a,b])});extraMarks[id]=merged;saveExtraMarks();renderExtraTable();}
-function editorRow(row){const wrapper=document.createElement('div');wrapper.className='extra-edit-line';const d=document.createElement('div');d.className='extra-mark-editor';const r=getExtraRange(row.id,row.raw);d.innerHTML=rangesMarkup(row.raw,r,(txt,i)=>`<mark data-mi="${i}" title="우클릭해서 키워드 삭제">${eEsc(txt)}</mark>`);wrapper.append(d);
+function editorRow(row){const wrapper=document.createElement('div');wrapper.className='extra-edit-line';const d=document.createElement('div');d.className='extra-mark-editor';const r=getExtraRange(row.id,row.raw);d.innerHTML=rangesMarkup(row.raw,r,(txt,i)=>`<mark class="editor-mark" data-mi="${i}" title="우클릭해서 키워드 삭제">${eEsc(txt)}</mark>`);wrapper.append(d);
  d.addEventListener('mouseup',()=>{const range=editableSelection(d);if(!range)return;window.getSelection()?.removeAllRanges();saveExtraRange(row.id,row.raw,[...getExtraRange(row.id,row.raw),range]);});
  d.addEventListener('contextmenu',event=>{const m=event.target.closest('mark[data-mi]');if(!m)return;event.preventDefault();saveExtraRange(row.id,row.raw,getExtraRange(row.id,row.raw).filter((_,i)=>i!==Number(m.dataset.mi)));});
  return wrapper;}
@@ -1504,7 +1516,15 @@ function gradeExtraKeyword(row,ki,typed,word){
  if(next){next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'});}
 }
 function fullRow(row){
- const box=document.createElement('div');box.className='extra-full-row';const field=document.createElement('textarea');field.rows=2;field.className='extra-input';field.placeholder='정답을 입력하고 Enter';field.value=extra.drafts[row.id]||'';field.spellcheck=false;field.dataset.rowId=row.id;
+ const box=document.createElement('div');box.className='extra-full-row';
+ if(extra.mode==='standardsStudy'){
+  const group=getExtraUnit().sections[row.si];
+  if(group&&(group.title==='성취기준'||group.title==='성취기준 해설')){
+   const codes=row.raw.match(/^\s*((?:\[[^\]]+\]\s*,?\s*)+)/);
+   if(codes){const label=document.createElement('div');label.className='extra-criterion-code';label.textContent=codes[1].trim();box.append(label);}
+  }
+ }
+ const field=document.createElement('textarea');field.rows=2;field.className='extra-input';field.placeholder='정답을 입력하고 Enter';field.value=extra.drafts[row.id]||'';field.spellcheck=false;field.dataset.rowId=row.id;
  field.addEventListener('input',()=>{extra.drafts[row.id]=field.value;delete extra.answers[row.id];const host=box.querySelector('.extra-full-feedback');host.innerHTML='';});
  field.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();let correct=getExtraRange(row.id,row.raw).map(([s,t])=>row.raw.slice(s,t));if(!correct.length)correct=[row.raw];const ok=!!eNorm(field.value)&&correct.every(w=>eNorm(field.value).includes(eNorm(w)));extra.answers[row.id]={ok,value:field.value};showFeedback();const fields=[...eGet('extraTable').querySelectorAll('textarea.extra-input')],pos=fields.indexOf(field);const next=fields.slice(pos+1).find(f=>!extra.answers[f.dataset.rowId]);if(next)requestAnimationFrame(()=>{next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'});});}});
  const host=document.createElement('div');host.className='extra-full-feedback';box.append(field,host);
@@ -1523,7 +1543,7 @@ function renderExtraTable(){
 }
 function renderExtra(){renderExtraNavigation();const course=CONTENT_COURSES[extra.course],counter=extra.mode==='standardsStudy'?`${extra.unit+1}단원`:'전체';
  eGet('extraTitle').textContent=course+' · '+counter;eGet('extraChapterName').textContent=extraHeaderName();eGet('extraFocusTitle').textContent=course+' · '+counter;
- eGet('extraMaskBtn').textContent=extra.mask?'전체 문장 입력':'키워드만 미공개';eGet('extraEditBtn').textContent=extra.edit?'설정 완료':'⚙ 키워드 설정';
+ eGet('extraMaskBtn').textContent=extra.mask?'키워드입력':'문장 입력';eGet('extraMaskBtn').classList.toggle('keyword-mode-active',extra.mask);eGet('extraMaskBtn').setAttribute('aria-pressed',String(extra.mask));eGet('extraEditBtn').textContent=extra.edit?'설정 완료':'⚙ 키워드 설정';
  eGet('extraEditorHelp').hidden=!extra.edit;eGet('extraStartSource').hidden=false;
  eGet('extraModeLabel').textContent=EXTRA_MODES[extra.mode];
  eGet('extraPrevBtn').disabled=extra.course===0&&extra.unit===0;eGet('extraNextBtn').disabled=extra.course===CONTENT_COURSES.length-1&&extra.unit===extraUnitCount()-1;
@@ -1545,7 +1565,7 @@ function renderExtraSource(){
  });
  eGet('extraSourceName').textContent=CONTENT_COURSES[extra.course]+' · '+(extra.mode==='character'?'성격 및 목표 PDF':'성취기준 원문');
 }
-function extraOpenEditor(){extra.edit=!extra.edit;if(extra.edit)extra.mask=false;renderExtra()}
+function extraOpenEditor(){extra.edit=!extra.edit;renderExtra()}
 function extraToggleSource(){extra.showSource=!extra.showSource;renderExtraSource()}
 function extraReset(){extra.answers={};extra.drafts={};renderExtraTable()}
 function extraBackToOutline(){extra.edit=false;renderExtra()}
@@ -1580,7 +1600,7 @@ function makeContentMaskTable(){
  const root=eGet('contentTableBody');root.replaceChildren();let qid=0;
  for(const t of CONTENT_TYPES){const row=document.createElement('tr');row.className='table-tr table-type-'+t;const th=document.createElement('th');th.className='table-row-label';th.textContent=CONTENT_LABELS[t];row.append(th);const td=document.createElement('td');td.className='table-row-content';const group=document.createElement('div');group.className='table-bullets';
   for(const raw of t==='T'?[u.name]:u[t]){
-   const id=qid++,keyBase=`${contentState.course}/${contentState.unit}/${id}`,word=contentText(raw);const markRanges=t==='T'||t==='K'?[[0,word.length]]:contentTextSegments(id,raw);const ranges=markRanges.length?markRanges:[[0,word.length]];
+   const id=qid++,keyBase=`${contentState.course}/${contentState.unit}/${id}`,word=contentText(raw);const markRanges=contentTextSegments(id,raw);const ranges=markRanges.length?markRanges:[[0,word.length]];
    const answerLine=document.createElement('div');answerLine.className='content-mask-line';const count=document.createElement('span');count.className='mask-no';count.textContent=t==='T'?'↳':String(id).padStart(2,'0');answerLine.append(count);
    const sentence=document.createElement('div');sentence.className='content-mask-sentence';let pos=0;
    ranges.forEach(([start,end],k)=>{
@@ -1607,8 +1627,8 @@ contentRenderTable=function(){
 const previousContentEditClose=contentEditorClose;
 contentEditorClose=function(){previousContentEditClose();if(contentMask)makeContentMaskTable()};
 function initContentMask(){
- const b=document.createElement('button');b.id='contentMaskBtn';b.className='btn';b.type='button';b.textContent='키워드만 미공개';eGet('contentSettingsOpen').before(b);
- b.onclick=()=>{contentMask=!contentMask;b.textContent=contentMask?'전체 문장 입력':'키워드만 미공개';contentRenderTable()};
+ const b=document.createElement('button');b.id='contentMaskBtn';b.className='btn';b.type='button';b.textContent=contentMask?'키워드입력':'문장 입력';b.classList.toggle('keyword-mode-active',contentMask);b.setAttribute('aria-pressed',String(contentMask));eGet('contentSettingsOpen').before(b);
+ b.onclick=()=>{contentMask=!contentMask;b.textContent=contentMask?'키워드입력':'문장 입력';b.classList.toggle('keyword-mode-active',contentMask);b.setAttribute('aria-pressed',String(contentMask));contentRenderTable()};
 }
 initContentMask();initExtraUI();
 
@@ -1759,7 +1779,7 @@ eGet('profileSubmit').onclick=applyKeywordProfile;
 eGet('profileSaveKey').onkeydown=e=>{if(e.key==='Enter')applyKeywordProfile();if(e.key==='Escape')closeKeywordRegister();};
 eGet('contentMyApply').onclick=()=>openKeywordList('saved','content',profileScopeFromContent());
 eGet('contentMyRegister').onclick=()=>showKeywordProfile('save',profileScopeFromContent());
-eGet('contentCurrentKeywordList').onclick=()=>openKeywordList('current','content',profileScopeFromContent());
+
 let extraScopeCourse=extra.course,extraScopeUnit=extra.unit;
 function refreshExtraBatchControls(){
  const c=eGet('extraBatchCourse'),u=eGet('extraBatchUnit');c.replaceChildren();u.replaceChildren();
@@ -1781,7 +1801,7 @@ eGet('extraBatchUnit').onchange=e=>{
 };
 eGet('extraMyApply').onclick=()=>openKeywordList('saved','extra',profileScopeFromExtra());
 eGet('extraMyRegister').onclick=()=>showKeywordProfile('save',profileScopeFromExtra());
-eGet('extraCurrentKeywordList').onclick=()=>openKeywordList('current','extra',profileScopeFromExtra());
+
 eGet('extraResetKeywords').onclick=()=>{
  if(!confirm('현재 학습 종류에서 선택된 범위의 키워드를 기본 상태로 되돌릴까요?'))return;
  const scope=profileScopeFromExtra();
@@ -1818,7 +1838,7 @@ function syncContentStudyPicker(){
  if(!course||!unit)return;
  if(course.options.length!==CONTENT_COURSES.length){course.replaceChildren();CONTENT_COURSES.forEach((name,i)=>{const op=document.createElement('option');op.value=String(i);op.textContent=name;course.append(op)})}
  course.value=String(contentState.course);
- const units=contentUnitsOf(contentState.course);unit.replaceChildren();units.forEach((u,i)=>{const op=document.createElement('option');op.value=String(i);op.textContent=`${i+1}단원 · ${u.name}`;unit.append(op)});
+ const units=contentUnitsOf(contentState.course);unit.replaceChildren();units.forEach((u,i)=>{const op=document.createElement('option');op.value=String(i);op.textContent=`${i+1}단원`;unit.append(op)});
  unit.value=String(contentState.unit);
 }
 contentEl('contentStudyCourse').addEventListener('change',e=>{
@@ -1838,7 +1858,7 @@ function syncExtraStudyPicker(){
  if(!course||!unit)return;
  if(course.options.length!==CONTENT_COURSES.length){course.replaceChildren();CONTENT_COURSES.forEach((name,i)=>{const op=document.createElement('option');op.value=String(i);op.textContent=name;course.append(op)})}
  course.value=String(extra.course);
- const units=contentUnitsOf(extra.course);unit.replaceChildren();units.forEach((u,i)=>{const op=document.createElement('option');op.value=String(i);op.textContent=`${i+1}단원 · ${u.name}`;unit.append(op)});
+ const units=contentUnitsOf(extra.course);unit.replaceChildren();units.forEach((u,i)=>{const op=document.createElement('option');op.value=String(i);op.textContent=`${i+1}단원`;unit.append(op)});
  unit.value=String(extra.unit);
 }
 eGet('extraStudyCourse').addEventListener('change',e=>{const c=Number(e.target.value);if(!Number.isInteger(c)||c<0||c>=CONTENT_COURSES.length)return;extra.course=c;extra.unit=0;renderExtra()});
