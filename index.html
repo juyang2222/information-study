@@ -690,6 +690,42 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
 #answerEditModal .answer-edit-footer{display:flex;justify-content:flex-end;align-items:center;gap:9px;padding:14px 22px;border-top:1px solid #e1e7f1;background:#fafbff}
 #answerEditModal .answer-edit-footer .btn{white-space:nowrap}
 @media(max-width:600px){#answerEditModal{padding:8px}#answerEditModal .answer-edit-content{padding:12px}#answerEditModal .answer-edit-header{padding:14px}#answerEditModal .answer-edit-footer{padding:12px}}
+
+.course-restart-btn[hidden]{display:none!important}
+/* 과목 완료 결과 및 오답만 다시 풀기 — 기존 학습 화면을 변경하지 않는 대화창 */
+.subject-finish-shade{position:fixed;inset:0;z-index:120000;background:rgba(33,45,74,.54);display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box}
+.subject-finish-dialog{width:min(550px,100%);max-height:min(88dvh,850px);overflow:auto;overscroll-behavior:contain;background:#fff;border:1px solid #dce3f2;border-radius:21px;box-shadow:0 24px 90px rgba(23,39,77,.23);color:#29344d;padding:29px;box-sizing:border-box;line-height:1.6}
+.subject-finish-dialog.is-review{width:min(810px,100%);padding:25px}
+.subject-finish-kicker{font-size:12px;font-weight:800;color:#5265a6;letter-spacing:.02em;margin:0 0 5px}
+.subject-finish-dialog h2{margin:0 0 4px;font-size:25px;line-height:1.35;letter-spacing:-.045em;font-weight:850;color:#25304b}
+.subject-finish-sub{font-size:13px;color:#7a859c;margin:2px 0 22px}
+.subject-finish-score{display:flex;align-items:baseline;gap:11px;margin:14px 0 20px}
+.subject-finish-score strong{font-size:53px;font-weight:850;letter-spacing:-.055em;color:#4257b2;line-height:1}
+.subject-finish-score span{font-size:14px;color:#6e7c96}
+.subject-finish-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 19px}
+.subject-finish-stat{padding:13px 9px;text-align:center;background:#f6f8fd;border:1px solid #e7ecf6;border-radius:13px}
+.subject-finish-stat strong{display:block;font-size:23px;font-weight:850;color:#303b59}
+.subject-finish-stat span{display:block;font-size:12px;color:#7b879d}
+.subject-finish-track{background:#edf0f7;height:8px;border-radius:9px;overflow:hidden;margin:0 0 15px}
+.subject-finish-track>span{display:block;height:100%;background:#6075d4;border-radius:9px;transition:width .2s ease}
+.subject-finish-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:21px}
+.subject-finish-action{border:1px solid #dce3f2;border-radius:10px;padding:11px 17px;background:#fff;color:#45546e;font:inherit;font-size:13px;font-weight:800;cursor:pointer;min-height:43px}
+.subject-finish-action.primary{background:#4257b2;border-color:#4257b2;color:#fff}
+.subject-finish-action:disabled{opacity:.5;cursor:default}
+.subject-finish-review-summary{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #e5eaf4;padding:0 0 13px;margin-bottom:13px;color:#566482;font-size:13px}
+.subject-finish-review-list{display:grid;gap:12px}
+.subject-finish-review-item{padding:14px;border:1px solid #e3e9f3;border-radius:13px;background:#fbfcff}
+.subject-finish-review-label{font-size:12px;font-weight:800;color:#5e70aa;margin-bottom:8px}
+.subject-finish-review-text{font-size:14px;line-height:2.25;color:#33425e;overflow-wrap:anywhere;white-space:pre-wrap}
+.subject-finish-review-input{max-width:100%;width:var(--guess-width,115px);height:35px;padding:5px 7px;background:#fff;border:1px solid #b5c3df;border-radius:8px;font:inherit;font-size:14px;outline-offset:2px;vertical-align:middle}
+.subject-finish-review-answer{border-radius:6px;padding:3px 6px;font-weight:800;vertical-align:baseline;white-space:pre-wrap}
+.subject-finish-review-answer.good{color:#137a52;background:#d8f3e6}
+.subject-finish-review-answer.bad{color:#b64757;background:#fce4e8}
+.subject-finish-review-help{font-size:12px;color:#8290a6;margin:12px 0 0}
+@media(max-width:650px){.subject-finish-shade{padding:10px}.subject-finish-dialog,.subject-finish-dialog.is-review{padding:20px 16px;border-radius:16px;max-height:94dvh}.subject-finish-dialog h2{font-size:22px}.subject-finish-score strong{font-size:44px}.subject-finish-review-item{padding:11px}.subject-finish-actions>.subject-finish-action{flex:1}}
+.subject-review-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:9px 0 14px;padding:10px 14px;border:1px solid #cfdfed;border-radius:12px;background:#f0f6ff;color:#465e8c;font-size:13px;font-weight:700}
+.subject-review-banner[hidden]{display:none!important}
+.subject-review-banner .subject-finish-action{min-height:34px;padding:6px 10px;font-size:12px}
 </style></head><body>
 <nav class="mode-switch" id="modeSwitch" aria-label="학습 모드 선택"><a class="brand" id="brandHome" href="#contents" aria-label="정보과 교육과정 처음 화면으로 이동">정보과 교육과정</a>
 <button type="button" id="modeContent" class="active">내용체계표 공부</button>
@@ -775,7 +811,7 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
       </div>
       <div class="study-navigator" id="contentBottom">
         <div class="nav-cluster"><span class="nav-label">단원</span><button type="button" class="btn" id="contentPrevUnitBtn">← 이전 단원</button><button type="button" class="btn primary" id="contentNextUnitBtn">다음 단원 →</button></div>
-        <div class="nav-cluster"><span class="nav-label">과목</span><button type="button" class="btn" id="contentPrevCourseBtn">← 이전 과목</button><button type="button" class="btn" id="contentNextCourseBtn">다음 과목 →</button><button type="button" class="btn" id="contentRevealBtn">전체 정답 확인</button><button type="button" class="btn" id="contentResetBtn">이 단원 다시 풀기</button></div>
+        <div class="nav-cluster"><span class="nav-label">과목</span><button type="button" class="btn" id="contentPrevCourseBtn">← 이전 과목</button><button type="button" class="btn" id="contentNextCourseBtn">다음 과목 →</button><button type="button" class="btn" id="contentRevealBtn">전체 정답 확인</button><button type="button" class="btn" id="contentResetBtn">이 단원 다시 풀기</button><button type="button" class="btn course-restart-btn" id="contentCourseRetryBtn" hidden>이 과목 다시 풀기</button></div>
       </div><span id="contentUnitProgress" class="hidden" aria-live="polite"></span>
       <p class="content-help" id="contentHelp">Enter는 정답 확인 후 다음 칸으로 이동합니다. ← → 는 단원 이동, 띄어쓰기·문장부호 차이는 채점에서 무시합니다.</p>
     </main>
@@ -806,7 +842,7 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
  </div>
  <div id="extraBatchBar" class="editor-bar" hidden><label>과목 <select id="extraBatchCourse"></select></label><label>단원 <select id="extraBatchUnit"></select></label><button type="button" class="btn" id="extraMyRegister">키워드 등록</button><button type="button" class="btn" id="extraMyApply">키워드 목록</button><button type="button" class="btn" id="extraResetKeywords">기본 키워드 세팅</button><button type="button" class="btn" id="extraAnswerEdit">답안수정</button></div><div class="extra-editor-help" id="extraEditorHelp" hidden>원문에서 원하는 문구를 드래그하면 키워드가 됩니다. 초록색 표시 위에서 우클릭하면 해제됩니다. 설정은 이 브라우저에만 저장됩니다.</div>
  <div class="extra-paper"><div class="extra-paper-header"><h2 id="extraFocusTitle">중학교 정보 · 1단원</h2></div><div id="extraTable"></div></div>
- <div class="extra-nav-bottom"><div><label>단원</label><button type="button" id="extraPrevBtnBottom" onclick="extraChange(-1)">← 이전 단원</button><button type="button" id="extraNextBtnBottom" onclick="extraChange(1)">다음 단원 →</button></div><div><label>과목</label><button type="button" id="extraPrevCourse">← 이전 과목</button><button type="button" id="extraNextCourse">다음 과목 →</button><button type="button" id="extraReset">다시 풀기</button></div></div>
+ <div class="extra-nav-bottom"><div><label>단원</label><button type="button" id="extraPrevBtnBottom" onclick="extraChange(-1)">← 이전 단원</button><button type="button" id="extraNextBtnBottom" onclick="extraChange(1)">다음 단원 →</button></div><div><label>과목</label><button type="button" id="extraPrevCourse">← 이전 과목</button><button type="button" id="extraNextCourse">다음 과목 →</button><button type="button" id="extraReset">다시 풀기</button><button type="button" class="course-restart-btn" id="extraCourseRetryBtn" hidden>이 과목 다시 풀기</button></div></div>
  <button id="extraEdgeLeft" type="button" class="extra-full-edge left" title="이전 단원">‹</button><button id="extraEdgeRight" type="button" class="extra-full-edge right" title="다음 단원">›</button>
  <aside class="extra-drawer" id="extraDrawer"><div class="extra-drawer-head">목차<button id="extraCloseToc" type="button" aria-label="목차 닫기">×</button></div><h3>과목</h3><div id="extraCourses"></div><h3>단원</h3><div id="extraUnits"></div></aside><button id="extraBackdrop" class="extra-backdrop" type="button" aria-label="목차 닫기"></button>
  <aside id="extraSourcePanel" hidden><div class="extra-source-top"><strong id="extraSourceName">PDF 원문</strong><button id="extraSourceZoom" type="button">확대/축소</button><button id="extraSourceClose" type="button">닫기 ×</button></div><div class="extra-source-scroll"><img id="extraPdfImage" alt="업로드한 PDF의 해당 단원 원문 전체 페이지"></div></aside><button id="extraSourceShade" class="extra-source-shade" type="button" aria-label="원문 닫기"></button>
@@ -1125,7 +1161,7 @@ function contentGradeItem(qid,moveNext){
   const previouslyGraded=!!contentState.answers[key];
   const correct=contentCorrect(q.type,q.raw,answer,qid);contentState.answers[key]={answer,correct};contentState.drafts[key]=answer;
   saveContent();const host=contentEl(`content-feedback-${qid}`);host.innerHTML=contentFeedbackHTML(q,answer,correct);
-  const item=field.closest('.table-answer-item');item.classList.toggle('is-right',correct);item.classList.toggle('is-wrong',!correct);contentUpdateProgress();
+  const item=field.closest('.table-answer-item');item.classList.toggle('is-right',correct);item.classList.toggle('is-wrong',!correct);contentUpdateProgress();setTimeout(()=>subjectCourseCheck('contents',contentState.course),85);
   if(moveNext){const inputs=[...contentEl('contentTableBody').querySelectorAll('textarea')],pos=inputs.indexOf(field);
     const next=inputs.slice(pos+1).find(el=>!contentState.answers[contentId(contentState.course,contentState.unit,Number(el.dataset.question))]);
     if(next)requestAnimationFrame(()=>{next.focus({preventScroll:true});next.scrollIntoView({behavior:'smooth',block:'center'});});
@@ -1185,7 +1221,7 @@ contentEl('contentFocusBtn').addEventListener('click',async()=>{
 
 
 contentEl('contentNextUnitBtn').addEventListener('click',()=>contentNextUnit(1));
-contentEl('contentResetBtn').addEventListener('click',()=>{
+contentEl('contentResetBtn').addEventListener('click',()=>{subjectCourseShown.delete('contents:'+contentState.course);
  const prefix=contentState.course+'/'+contentState.unit+'/';
  for(let i=0;i<contentItems().length;i++){
   delete contentState.answers[contentId(contentState.course,contentState.unit,i)];
@@ -1524,16 +1560,19 @@ function editorRow(row){const wrapper=document.createElement('div');wrapper.clas
  d.addEventListener('mouseup',()=>{const range=editableSelection(d);if(!range)return;window.getSelection()?.removeAllRanges();saveExtraRange(row.id,row.raw,[...getExtraRange(row.id,row.raw),range]);});
  d.addEventListener('contextmenu',event=>{const m=event.target.closest('mark[data-mi]');if(!m)return;event.preventDefault();saveExtraRange(row.id,row.raw,getExtraRange(row.id,row.raw).filter((_,i)=>i!==Number(m.dataset.mi)));});
  return wrapper;}
-function maskRanges(row){return getExtraRange(row.id,row.raw)}
+function maskRanges(row){const r=getExtraRange(row.id,row.raw);return r.length?r:(extra.mode==='standardsStudy'&&row.raw?[[0,row.raw.length]]:[])}
 function rowKey(row,i){return row.id+'/'+i}
 function maskInputRow(row){
  const p=document.createElement('div');p.className='extra-mask-sentence';const ranges=maskRanges(row);let pos=0;
+ const review=subjectReviewSession?.kind==='standardsStudy'&&subjectReviewSession.course===extra.course&&extra.mode==='standardsStudy'?subjectReviewSession:null;
  ranges.sort((a,b)=>a[0]-b[0]).forEach(([start,end],ki)=>{
   if(start<pos||end>row.raw.length)return;
   p.append(document.createTextNode(row.raw.slice(pos,start)));
-  const word=row.raw.slice(start,end),key=rowKey(row,ki),existing=extra.answers[key]||(extraRevealAll?{ok:true,value:word,reveal:true}:null);
+  const word=row.raw.slice(start,end),key=rowKey(row,ki);
+   if(review&&!review.targets[row.id]?.includes(ki)){p.append(document.createTextNode(word));pos=end;return;}
+   const existing=review?review.responses[key]:(extra.answers[key]||(extraRevealAll?{ok:true,value:word,reveal:true}:null));
   const holder=document.createElement('span');holder.className='inline-answer'+(existing?(existing.ok?' correct':' incorrect'):'');
-  if(existing){const reveal=document.createElement('span');reveal.className='inline-revealed';reveal.textContent=word;reveal.title=existing.ok?'정답':'입력: '+existing.value;holder.append(reveal);if(!existing.reveal){const reset=document.createElement('button');reset.type='button';reset.className='inline-reset';reset.textContent='↻';reset.setAttribute('aria-label','다시 입력');reset.onclick=()=>{delete extra.answers[key];renderExtraTable()};holder.append(reset);}}
+  if(existing){const reveal=document.createElement('span');reveal.className='inline-revealed';reveal.textContent=word;reveal.title=existing.ok?'정답':'입력: '+existing.value;holder.append(reveal);if(!existing.reveal){const reset=document.createElement('button');reset.type='button';reset.className='inline-reset';reset.textContent='↻';reset.setAttribute('aria-label','다시 입력');reset.onclick=()=>{if(review)delete review.responses[key];else delete extra.answers[key];renderExtraTable()};holder.append(reset);}}
   else{const inp=document.createElement('input');inp.type='text';inp.className='inline-blank';inp.style.width=`${Math.max(88,Math.min(240,word.length*17+35))}px`;inp.setAttribute('aria-label','키워드 '+(ki+1));inp.autocomplete='off';inp.spellcheck=false;inp.value=extra.drafts[key]||'';
     inp.addEventListener('input',()=>extra.drafts[key]=inp.value);
     inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();gradeExtraKeyword(row,ki,inp.value,word);}});
@@ -1544,7 +1583,9 @@ function maskInputRow(row){
 }
 function gradeExtraKeyword(row,ki,typed,word){
  const key=rowKey(row,ki),ok=eNorm(typed)===eNorm(word);
- extra.answers[key]={ok,value:typed};renderExtraTable();
+ const review=subjectReviewSession?.kind==='standardsStudy'&&subjectReviewSession.course===extra.course&&extra.mode==='standardsStudy'?subjectReviewSession:null;
+ if(review)review.responses[key]={ok,value:typed};else extra.answers[key]={ok,value:typed};
+ renderExtraTable();if(!review&&extra.mode==='standardsStudy')setTimeout(()=>subjectCourseCheck('standardsStudy',extra.course),85);
  const holders=[...eGet('extraTable').querySelectorAll('.inline-answer[data-blankkey]')];
  const index=holders.findIndex(el=>el.dataset.blankkey===key);
  // Previously answered blanks have no input; skip over them instead of stopping.
@@ -1562,7 +1603,7 @@ function fullRow(row){
  }
  const field=document.createElement('textarea');field.rows=2;field.className='extra-input';field.placeholder='정답을 입력하고 Enter';field.value=extra.drafts[row.id]||'';field.spellcheck=false;field.dataset.rowId=row.id;
  field.addEventListener('input',()=>{extra.drafts[row.id]=field.value;delete extra.answers[row.id];const host=box.querySelector('.extra-full-feedback');host.innerHTML='';});
- field.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();let correct=getExtraRange(row.id,row.raw).map(([s,t])=>row.raw.slice(s,t));if(!correct.length)correct=[row.raw];const ok=!!eNorm(field.value)&&correct.every(w=>eNorm(field.value).includes(eNorm(w)));extra.answers[row.id]={ok,value:field.value};showFeedback();const fields=[...eGet('extraTable').querySelectorAll('textarea.extra-input')],pos=fields.indexOf(field);const next=fields.slice(pos+1).find(f=>!extra.answers[f.dataset.rowId]);if(next)requestAnimationFrame(()=>{next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'});});}});
+ field.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();let correct=getExtraRange(row.id,row.raw).map(([s,t])=>row.raw.slice(s,t));if(!correct.length)correct=[row.raw];const ok=!!eNorm(field.value)&&correct.every(w=>eNorm(field.value).includes(eNorm(w)));extra.answers[row.id]={ok,value:field.value};showFeedback();if(extra.mode==='standardsStudy')setTimeout(()=>subjectCourseCheck('standardsStudy',extra.course),85);const fields=[...eGet('extraTable').querySelectorAll('textarea.extra-input')],pos=fields.indexOf(field);const next=fields.slice(pos+1).find(f=>!extra.answers[f.dataset.rowId]);if(next)requestAnimationFrame(()=>{next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'});});}});
  const host=document.createElement('div');host.className='extra-full-feedback';box.append(field,host);
  function showFeedback(){const a=extra.answers[row.id];if(!a)return;const all=getExtraRange(row.id,row.raw);host.innerHTML=`<div class="extra-status ${a.ok?'good':'bad'}">${a.ok?'✓ 정답':'✕ 오답'}</div><div class="extra-correct-text">${rangesMarkup(row.raw,all,(s)=>`<strong class="${eNorm(a.value).includes(eNorm(s))?'good':'bad'}">${eEsc(s)}</strong>`)}</div>`;}
  showFeedback();if(extraRevealAll&&!extra.answers[row.id]){host.textContent="정답 · "+row.raw;host.classList.add("all-reveal-text");}return box;
@@ -1603,7 +1644,7 @@ function renderExtraSource(){
 }
 function extraOpenEditor(){extra.edit=!extra.edit;renderExtra()}
 function extraToggleSource(){extra.showSource=!extra.showSource;renderExtraSource()}
-function extraReset(){extra.answers={};extra.drafts={};renderExtraTable()}
+function extraReset(){if(extra.mode==='standardsStudy')subjectCourseShown.delete('standardsStudy:'+extra.course);extra.answers={};extra.drafts={};renderExtraTable()}
 function extraBackToOutline(){extra.edit=false;renderExtra()}
 function initExtraUI(){
  eGet('extraTocBtn').onclick=toggleExtraToc;eGet('extraCloseToc').onclick=closeExtraToc;eGet('extraBackdrop').onclick=closeExtraToc;
@@ -1632,8 +1673,10 @@ function initExtraUI(){
 }
 /* Keyword-only mask mode for original PDF-structured content table */
 function makeContentMaskTable(){
- const u=contentUnit(),title=`${CONTENT_COURSES[contentState.course]} - ${contentState.unit+1}단원`;eGet('contentUnitHeading').textContent=title;eGet('contentTableTitle').textContent=title;
- eGet('contentUnitDesc').textContent='색칠된 키워드만 입력하세요. Enter로 채점하고 다음 칸으로 이동합니다.';
+ const u=contentUnit(),title=`${CONTENT_COURSES[contentState.course]} - ${contentState.unit+1}단원`;
+ const review=subjectReviewSession?.kind==='contents'&&subjectReviewSession.course===contentState.course?subjectReviewSession:null;
+ eGet('contentUnitHeading').textContent=title;eGet('contentTableTitle').textContent=title;
+ eGet('contentUnitDesc').textContent=review?'오답 복습 중 · 이전에 틀린 부분만 빈칸으로 표시합니다.':'색칠된 키워드만 입력하세요. Enter로 채점하고 다음 칸으로 이동합니다.';
  const root=eGet('contentTableBody');root.replaceChildren();let qid=0;
  for(const t of CONTENT_TYPES){const row=document.createElement('tr');row.className='table-tr table-type-'+t;const th=document.createElement('th');th.className='table-row-label';th.textContent=CONTENT_LABELS[t];row.append(th);const td=document.createElement('td');td.className='table-row-content';const group=document.createElement('div');group.className='table-bullets';
   for(const raw of t==='T'?[u.name]:u[t]){
@@ -1642,10 +1685,13 @@ function makeContentMaskTable(){
    const sentence=document.createElement('div');sentence.className='content-mask-sentence';let pos=0;
    ranges.forEach(([start,end],k)=>{
     if(start<pos||end>word.length||end<=start)return;sentence.append(document.createTextNode(word.slice(pos,start)));
-    const kw=word.slice(start,end),key=keyBase+'/'+k,existing=contentMaskResponses[key],holder=document.createElement('span');holder.className='inline-answer'+(existing?(existing.ok?' correct':' incorrect'):'');holder.dataset.maskKey=key;
-    if(existing||contentRevealAll){const fixed=document.createElement('span');fixed.className='inline-revealed';fixed.textContent=kw;fixed.title=(!existing||existing.ok)?'정답':'오답: '+existing.answer;holder.classList.add(!existing||existing.ok?'correct':'incorrect');holder.append(fixed);if(existing){const reset=document.createElement('button');reset.type='button';reset.className='inline-reset';reset.textContent='↻';reset.onclick=()=>{delete contentMaskResponses[key];makeContentMaskTable()};holder.append(reset);}}
+    const kw=word.slice(start,end),key=keyBase+'/'+k;
+     if(review&&!review.targets[keyBase]?.includes(k)){sentence.append(document.createTextNode(kw));pos=end;return;}
+     const existing=review?review.responses[key]:contentMaskResponses[key];
+     const holder=document.createElement('span');holder.className='inline-answer'+(existing?(existing.ok?' correct':' incorrect'):'');holder.dataset.maskKey=key;
+    if(existing||(!review&&contentRevealAll)){const fixed=document.createElement('span');fixed.className='inline-revealed';fixed.textContent=kw;fixed.title=(!existing||existing.ok)?'정답':'오답: '+existing.answer;holder.classList.add(!existing||existing.ok?'correct':'incorrect');holder.append(fixed);if(existing){const reset=document.createElement('button');reset.type='button';reset.className='inline-reset';reset.textContent='↻';reset.onclick=()=>{if(review)delete review.responses[key];else delete contentMaskResponses[key];makeContentMaskTable()};holder.append(reset);}}
     else{const inp=document.createElement('input');inp.type='text';inp.autocomplete='off';inp.spellcheck=false;inp.className='inline-blank';inp.placeholder='____';inp.setAttribute('aria-label',`${CONTENT_LABELS[t]} 키워드 ${k+1}`);inp.style.width=Math.max(90,Math.min(240,kw.length*17+35))+'px';
-      inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();contentMaskResponses[key]={ok:eNorm(inp.value)===eNorm(kw),answer:inp.value};makeContentMaskTable();const holders=[...root.querySelectorAll('.inline-answer')];const currentIndex=holders.findIndex(x=>x.dataset.maskKey===key);const next=holders.slice(currentIndex+1).map(x=>x.querySelector('input.inline-blank')).find(Boolean);if(next){next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'})};}});
+      inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();if(review)review.responses[key]={ok:eNorm(inp.value)===eNorm(kw),answer:inp.value};else contentMaskResponses[key]={ok:eNorm(inp.value)===eNorm(kw),answer:inp.value};makeContentMaskTable();if(!review)setTimeout(()=>subjectCourseCheck('contents',contentState.course),85);const holders=[...root.querySelectorAll('.inline-answer')];const currentIndex=holders.findIndex(x=>x.dataset.maskKey===key);const next=holders.slice(currentIndex+1).map(x=>x.querySelector('input.inline-blank')).find(Boolean);if(next){next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'})};}});
       holder.append(inp);
     }sentence.append(holder);pos=end;
    });sentence.append(document.createTextNode(word.slice(pos)));answerLine.append(sentence);group.append(answerLine);
@@ -2064,6 +2110,244 @@ document.getElementById('answerEditCancel').addEventListener('click',closeAnswer
 document.getElementById('answerEditClose').addEventListener('click',closeAnswerEdit);
 answerEditModal.addEventListener('click',e=>{if(e.target===answerEditModal)closeAnswerEdit();});
 answerEditModal.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closeAnswerEdit();}e.stopPropagation();});
+
+/* 과목별 첫 학습 완료 / 오답 복습: 브라우저에 진도 데이터를 저장하지 않음 */
+const subjectCourseShown=new Set();
+let subjectReviewSession=null;
+let subjectActiveShade=null;
+function subjectCourseQuestions(kind,course){
+ const result=[];
+ if(kind==='contents'){
+  contentUnitsOf(course).forEach((unit,unitIndex)=>{
+   const rows=[{type:'T',raw:unit.name},...['I','K','P','V'].flatMap(type=>unit[type].map(raw=>({type,raw})))];
+   rows.forEach((q,qid)=>{
+    const id=contentId(course,unitIndex,qid),text=contentText(q.raw);
+    const sourceRanges=contentRanges(qid,q.raw,course,unitIndex).filter(([a,b])=>a>=0&&b<=text.length&&a<b).sort((a,b)=>a[0]-b[0]);
+    const candidates=sourceRanges.length?sourceRanges:[[0,text.length]];
+    const visible=[];let lastEnd=0;
+    candidates.forEach((range,ki)=>{if(range[0]>=lastEnd){visible.push({range,ki});lastEnd=range[1];}});
+    const ranges=visible.map(v=>v.range);
+    const blankAnswers=visible.map(v=>contentMaskResponses[id+'/'+v.ki]);
+    const maskDone=blankAnswers.every(Boolean),full=contentState.answers[id];
+    const done=maskDone||!!full,correct=maskDone?blankAnswers.every(v=>v.ok):!!(full&&full.correct);
+    result.push({kind,course,unit:unitIndex,id,raw:q.raw,text,ranges,keyIndices:visible.map(v=>v.ki),section:CONTENT_LABELS[q.type],done,correct});
+   });
+  });
+ }else if(kind==='standardsStudy'){
+  let offset=0;for(let c=0;c<course;c++)offset+=contentUnitsOf(c).length;
+  contentUnitsOf(course).forEach((_,unitIndex)=>{
+   const source=STUDY_DOCUMENTS.standards[offset+unitIndex];
+   if(!source)return;
+   source.sections.forEach((section,si)=>section.rows.forEach((text,ri)=>{
+    const id=`standardsStudy:${course}:${unitIndex}:${si}:${ri}`;
+    const marked=getExtraRange(id,text).sort((a,b)=>a[0]-b[0]);
+    const candidates=marked.length?marked:[[0,text.length]];
+    const visible=[];let lastEnd=0;
+    candidates.forEach((range,ki)=>{if(range[0]>=lastEnd&&range[1]>range[0]&&range[1]<=text.length){visible.push({range,ki});lastEnd=range[1];}});
+    const ranges=visible.map(v=>v.range);
+    const blankAnswers=visible.map(v=>extra.answers[id+'/'+v.ki]);
+    const maskDone=blankAnswers.every(Boolean),full=extra.answers[id];
+    const done=maskDone||!!full,correct=maskDone?blankAnswers.every(v=>v.ok):!!(full&&full.ok);
+    result.push({kind,course,unit:unitIndex,id,text,raw:text,ranges,keyIndices:visible.map(v=>v.ki),section:section.title,done,correct});
+   }));
+  });
+ }
+ return result;
+}
+function subjectCourseCheck(kind,course){
+ if(kind!=='contents'&&kind!=='standardsStudy')return;
+ if(subjectReviewSession?.kind===kind&&subjectReviewSession.course===course)return;
+ const id=kind+':'+course;
+ if(subjectCourseShown.has(id)||subjectActiveShade)return;
+ const rows=subjectCourseQuestions(kind,course);
+ if(!rows.length||rows.some(r=>!r.done))return;
+ subjectCourseShown.add(id);
+ subjectShowFinish(kind,course,rows);
+}
+function subjectCreateShade(kind,review){
+ subjectCloseShade();
+ const page=document.getElementById(kind==='contents'?'contentPage':'extraPage');
+ const shade=document.createElement('div');shade.className='subject-finish-shade';
+ shade.setAttribute('role','presentation');
+ const dialog=document.createElement('div');dialog.className='subject-finish-dialog'+(review?' is-review':'');dialog.setAttribute('role','dialog');
+ dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label',review?'오답 다시 풀기':'과목 학습 결과');
+ shade.append(dialog);page.append(shade);subjectActiveShade=shade;
+ shade.addEventListener('click',e=>{if(e.target===shade)subjectCloseShade();});
+ shade.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();e.preventDefault();subjectCloseShade();}});
+ return dialog;
+}
+function subjectCloseShade(){if(subjectActiveShade){subjectActiveShade.remove();subjectActiveShade=null;}subjectReviewSession=null;}
+function subjectButton(label,action,primary=false){
+ const b=document.createElement('button');b.type='button';b.className='subject-finish-action'+(primary?' primary':'');b.textContent=label;b.addEventListener('click',action);return b;
+}
+function subjectText(tag,cls,value){const e=document.createElement(tag);e.className=cls;e.textContent=value;return e;}
+function subjectShowFinish(kind,course,rows){
+ const total=rows.length,correct=rows.filter(r=>r.correct).length,wrong=rows.filter(r=>!r.correct);
+ const percentage=Math.round(correct/total*100),title=kind==='contents'?'내용체계표 공부':'성취기준 공부';
+ const dialog=subjectCreateShade(kind,false);
+ dialog.append(subjectText('p','subject-finish-kicker',title+' · '+CONTENT_COURSES[course]),subjectText('h2','',CONTENT_COURSES[course]+' 학습 완료'));
+ dialog.append(subjectText('p','subject-finish-sub','이 과목의 모든 문항을 채점했어요.'));
+ const score=document.createElement('div');score.className='subject-finish-score';
+ score.append(subjectText('strong','',percentage+'%'),subjectText('span','','정답률'));dialog.append(score);
+ const stats=document.createElement('div');stats.className='subject-finish-stats';
+ [['전체 문제',total],['정답',correct],['오답',wrong.length]].forEach(([name,value])=>{const el=document.createElement('div');el.className='subject-finish-stat';el.append(subjectText('strong','',String(value)),subjectText('span','',name));stats.append(el);});
+ dialog.append(stats);
+ const track=document.createElement('div');track.className='subject-finish-track';const bar=document.createElement('span');bar.style.width=percentage+'%';track.append(bar);dialog.append(track);
+ dialog.append(subjectText('p','subject-finish-sub',wrong.length?`틀린 문제 ${wrong.length}개만 모아서 다시 풀 수 있어요.`:'전부 정답이에요!'));
+ const actions=document.createElement('div');actions.className='subject-finish-actions';
+ actions.append(subjectButton('닫기',subjectCloseShade));
+ if(wrong.length)actions.append(subjectButton('틀린 문제 다시 풀기',()=>subjectStartReview(kind,course,wrong),true));
+ dialog.append(actions);
+ requestAnimationFrame(()=>actions.querySelector('button.primary,button')?.focus({preventScroll:true}));
+}
+/* 오답 복습: 별도 팝업을 만들지 않고 해당 과목의 1단원 표에서 시작합니다. */
+function subjectReviewFor(kind,course){
+ return subjectReviewSession?.kind===kind&&subjectReviewSession.course===course?subjectReviewSession:null;
+}
+function subjectStartReview(kind,course,rows){
+ const targets={};
+ rows.forEach(row=>{
+   // 키워드 입력에서 맞힌 칸은 이미 알고 있는 부분이므로 다시 가리지 않습니다.
+   const indices=row.keyIndices||row.ranges.map((_,ki)=>ki);
+   const misses=indices.filter(ki=>{
+     const graded=kind==='contents'?contentMaskResponses[row.id+'/'+ki]:extra.answers[row.id+'/'+ki];
+     return !graded?.ok;
+   });
+   targets[row.id]=misses.length?misses:indices;
+ });
+ subjectCloseShade();
+ subjectReviewSession={kind,course,targets,responses:{}};
+ if(kind==='contents'){
+   contentState.course=course;contentState.unit=0;contentMask=true;contentRevealAll=false;
+   const button=eGet('contentMaskBtn');if(button){button.textContent='키워드입력';button.classList.add('keyword-mode-active');button.setAttribute('aria-pressed','true');}
+   contentRender();contentScrollTop();
+ }else{
+   extra.mode='standardsStudy';extra.course=course;extra.unit=0;extra.mask=true;extra.edit=false;extraRevealAll=false;
+   renderExtra();eGet('extraPage').scrollTo({top:0,behavior:'instant'});
+ }
+ subjectUpdateReviewBanner();
+ requestAnimationFrame(()=>subjectFocusUnitStart(kind));
+}
+function subjectFocusUnitStart(kind){
+ const isContent=kind==='contents',page=eGet(isContent?'contentPage':'extraPage');
+ if(page.classList.contains('hidden'))return;
+ const target=page.querySelector(isContent?'#contentTableBody input.inline-blank, #contentTableBody textarea.table-input':'#extraTable input.inline-blank, #extraTable textarea.extra-input');
+ if(target){target.focus({preventScroll:true});target.scrollIntoView({behavior:'instant',block:'center'});}
+}
+function subjectEndReview(){
+ const kind=subjectReviewSession?.kind;
+ subjectReviewSession=null;
+ if(kind==='contents')contentRender();
+ else if(kind==='standardsStudy')renderExtra();
+ subjectUpdateReviewBanner();
+}
+function subjectUpdateReviewBanner(){
+ for(const kind of ['contents','standardsStudy']){
+  const page=eGet(kind==='contents'?'contentPage':'extraPage');
+  const slot=page.querySelector(kind==='contents'?'#contentStudyPicker':'#extraTable');
+  if(!slot)continue;
+  let banner=page.querySelector('.subject-review-banner');
+  if(!banner){
+   banner=document.createElement('div');banner.className='subject-review-banner';
+   const status=document.createElement('span');status.className='subject-review-banner-text';banner.append(status);
+   const close=subjectButton('일반 학습으로 돌아가기',subjectEndReview);banner.append(close);
+   slot.parentNode.insertBefore(banner,slot);
+  }
+  const active=subjectReviewFor(kind,kind==='contents'?contentState.course:extra.course);
+  banner.hidden=!active;
+  if(active){
+   const unit=kind==='contents'?contentState.unit:extra.unit;
+   const prefix=kind==='contents'?`${active.course}/${unit}/`:`standardsStudy:${active.course}:${unit}:`;
+   const unitKeys=Object.keys(active.targets).filter(k=>k.startsWith(prefix));
+   const blanks=unitKeys.reduce((n,k)=>n+active.targets[k].length,0);
+   banner.querySelector('.subject-review-banner-text').textContent=`오답 복습 · ${CONTENT_COURSES[active.course]} ${unit+1}단원 · 다시 풀 빈칸 ${blanks}개`;
+  }
+ }
+}
+/* 새 단원으로 이동할 때 첫 번째 미채점 빈칸에 자동으로 커서를 둡니다. */
+(function(){
+ const priorContentRender=contentRender;let lastContent=`${contentState.course}/${contentState.unit}`;
+ contentRender=function(){
+  const key=`${contentState.course}/${contentState.unit}`,changed=key!==lastContent;
+  lastContent=key;priorContentRender();subjectUpdateReviewBanner();
+  if(changed)requestAnimationFrame(()=>{
+   if(`${contentState.course}/${contentState.unit}`===key&&eGet('contentSettingsOverlay').hidden)subjectFocusUnitStart('contents');
+  });
+ };
+ const priorExtraRender=renderExtra;let lastExtra=`${extra.mode}/${extra.course}/${extra.unit}`;
+ renderExtra=function(){
+  const key=`${extra.mode}/${extra.course}/${extra.unit}`,changed=key!==lastExtra;
+  lastExtra=key;priorExtraRender();subjectUpdateReviewBanner();
+  if(changed&&extra.mode==='standardsStudy')requestAnimationFrame(()=>{
+   if(`${extra.mode}/${extra.course}/${extra.unit}`===key&&!extra.edit)subjectFocusUnitStart('standardsStudy');
+  });
+ };
+})();
+
+/* 마지막 단원: 과목 전체를 새로 풀거나 기존 오답만 다시 풀 수 있는 선택창 */
+function subjectCourseRetryVisible(){
+ const contentButton=document.getElementById('contentCourseRetryBtn');
+ if(contentButton)contentButton.hidden=contentState.unit!==contentUnitsOf(contentState.course).length-1;
+ const extraButton=document.getElementById('extraCourseRetryBtn');
+ if(extraButton)extraButton.hidden=extra.mode!=='standardsStudy'||extra.unit!==contentUnitsOf(extra.course).length-1;
+}
+function subjectRestartWholeCourse(kind,course){
+ subjectCloseShade();
+ subjectCourseShown.delete(kind+':'+course);
+ if(kind==='contents'){
+  const prefix=course+'/';
+  for(const data of [contentState.answers,contentState.drafts,contentMaskResponses]){
+   for(const key of Object.keys(data))if(key.startsWith(prefix))delete data[key];
+  }
+  contentState.course=course;contentState.unit=0;contentMask=true;contentRevealAll=false;
+  const reveal=document.getElementById('contentRevealBtn');if(reveal)reveal.textContent='전체 정답 확인';
+  const mask=document.getElementById('contentMaskBtn');if(mask){mask.textContent='키워드입력';mask.classList.add('keyword-mode-active');mask.setAttribute('aria-pressed','true');}
+  contentRender();contentScrollTop();
+ }else if(kind==='standardsStudy'){
+  const prefix='standardsStudy:'+course+':';
+  for(const data of [extra.answers,extra.drafts]){
+   for(const key of Object.keys(data))if(key.startsWith(prefix))delete data[key];
+  }
+  extra.mode='standardsStudy';extra.course=course;extra.unit=0;extra.mask=true;extra.edit=false;extraRevealAll=false;
+  renderExtra();document.getElementById('extraPage').scrollTo({top:0,behavior:'instant'});
+ }
+ requestAnimationFrame(()=>subjectFocusUnitStart(kind));
+}
+function subjectShowCourseRetry(kind,course){
+ if(subjectActiveShade)return;
+ const oldReview=subjectReviewSession;
+ // 선택창은 기존 성적을 바꾸지 않으며, 취소하면 복습 중이던 상태도 유지됩니다.
+ const page=document.getElementById(kind==='contents'?'contentPage':'extraPage');
+ const shade=document.createElement('div');shade.className='subject-finish-shade';
+ const dialog=document.createElement('div');dialog.className='subject-finish-dialog';
+ dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','이 과목 다시 풀기');
+ shade.append(dialog);page.append(shade);subjectActiveShade=shade;
+ const close=()=>{if(shade.isConnected)shade.remove();if(subjectActiveShade===shade)subjectActiveShade=null;subjectReviewSession=oldReview;};
+ shade.addEventListener('click',e=>{if(e.target===shade)close();});
+ shade.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();close();}});
+ dialog.append(subjectText('p','subject-finish-kicker',CONTENT_COURSES[course]),subjectText('h2','','이 과목 다시 풀기'),subjectText('p','subject-finish-sub','다시 풀 학습 방식을 선택하세요.'));
+ const rows=subjectCourseQuestions(kind,course);
+ const wrong=rows.filter(row=>row.done&&!row.correct);
+ const actions=document.createElement('div');actions.className='subject-finish-actions';
+ actions.append(subjectButton('취소',close));
+ actions.append(subjectButton('모든 문제 다시 풀기',()=>{close();subjectRestartWholeCourse(kind,course);},true));
+ const wrongButton=subjectButton('틀린 문제 다시 풀기',()=>{close();subjectStartReview(kind,course,wrong);});
+ if(!wrong.length){wrongButton.disabled=true;wrongButton.title='채점한 오답이 없습니다';}
+ actions.append(wrongButton);
+ dialog.append(actions);
+ if(!wrong.length)dialog.append(subjectText('p','subject-finish-sub','현재 채점된 오답이 없어 틀린 문제 다시 풀기는 선택할 수 없습니다.'));
+ requestAnimationFrame(()=>actions.querySelector('button.primary')?.focus({preventScroll:true}));
+}
+(function(){
+ const previousContentRender=contentRender;
+ contentRender=function(){previousContentRender();subjectCourseRetryVisible();};
+ const previousExtraRender=renderExtra;
+ renderExtra=function(){previousExtraRender();subjectCourseRetryVisible();};
+ document.getElementById('contentCourseRetryBtn').addEventListener('click',()=>subjectShowCourseRetry('contents',contentState.course));
+ document.getElementById('extraCourseRetryBtn').addEventListener('click',()=>subjectShowCourseRetry('standardsStudy',extra.course));
+ subjectCourseRetryVisible();
+})();
+
 // Apply corrections before the final initial render; no progress data is stored.
 applySavedAnswerCorrections();
 
