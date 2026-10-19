@@ -2204,25 +2204,38 @@ function subjectShowFinish(kind,course,rows){
 function subjectReviewFor(kind,course){
  return subjectReviewSession?.kind===kind&&subjectReviewSession.course===course?subjectReviewSession:null;
 }
+/* 오답 복습 대상이 있는 단원을 찾아, 정답만 보이는 빈 단원을 건너뜁니다. */
+function subjectReviewUnitList(kind,course,targets){
+ const available=[];
+ for(let unit=0;unit<contentUnitsOf(course).length;unit++){
+  const prefix=kind==='contents'?`${course}/${unit}/`:`standardsStudy:${course}:${unit}:`;
+  if(Object.entries(targets).some(([key,parts])=>key.startsWith(prefix)&&parts.length))available.push(unit);
+ }
+ return available;
+}
 function subjectStartReview(kind,course,rows){
  const targets={};
  rows.forEach(row=>{
-   // 키워드 입력에서 맞힌 칸은 이미 알고 있는 부분이므로 다시 가리지 않습니다.
    const indices=row.keyIndices||row.ranges.map((_,ki)=>ki);
+   // 일부만 틀렸으면 그 키워드만 다시 가립니다. 문장 입력에서 통째로
+   // 틀렸으면 해당 문장에 지정된 키워드를 모두 다시 출제합니다.
    const misses=indices.filter(ki=>{
      const graded=kind==='contents'?contentMaskResponses[row.id+'/'+ki]:extra.answers[row.id+'/'+ki];
      return !graded?.ok;
    });
-   targets[row.id]=misses.length?misses:indices;
+   if(misses.length)targets[row.id]=misses;
  });
+ const units=subjectReviewUnitList(kind,course,targets);
  subjectCloseShade();
- subjectReviewSession={kind,course,targets,responses:{}};
+ if(!units.length)return;
+ subjectReviewSession={kind,course,targets,responses:{},units};
+ const firstUnit=units[0];
  if(kind==='contents'){
-   contentState.course=course;contentState.unit=0;contentMask=true;contentRevealAll=false;
+   contentState.course=course;contentState.unit=firstUnit;contentMask=true;contentRevealAll=false;
    const button=eGet('contentMaskBtn');if(button){button.textContent='키워드입력';button.classList.add('keyword-mode-active');button.setAttribute('aria-pressed','true');}
    contentRender();contentScrollTop();
  }else{
-   extra.mode='standardsStudy';extra.course=course;extra.unit=0;extra.mask=true;extra.edit=false;extraRevealAll=false;
+   extra.mode='standardsStudy';extra.course=course;extra.unit=firstUnit;extra.mask=true;extra.edit=false;extraRevealAll=false;
    renderExtra();eGet('extraPage').scrollTo({top:0,behavior:'instant'});
  }
  subjectUpdateReviewBanner();
@@ -2346,6 +2359,26 @@ function subjectShowCourseRetry(kind,course){
  document.getElementById('contentCourseRetryBtn').addEventListener('click',()=>subjectShowCourseRetry('contents',contentState.course));
  document.getElementById('extraCourseRetryBtn').addEventListener('click',()=>subjectShowCourseRetry('standardsStudy',extra.course));
  subjectCourseRetryVisible();
+})();
+
+/* 오답 복습 시 이전/다음 단원 버튼은 오답이 있는 단원끼리 이동합니다. */
+(function(){
+ const originalContentNextUnit=contentNextUnit;
+ contentNextUnit=function(dir){
+  const review=subjectReviewFor('contents',contentState.course);
+  if(!review)return originalContentNextUnit(dir);
+  const unit=review.units[dir>0?'find':'findLast'](u=>dir>0?u>contentState.unit:u<contentState.unit);
+  if(unit===undefined)return;
+  contentState.unit=unit;contentRender();contentScrollTop();
+ };
+ const originalExtraChange=extraChange;
+ extraChange=function(dir){
+  const review=extra.mode==='standardsStudy'?subjectReviewFor('standardsStudy',extra.course):null;
+  if(!review)return originalExtraChange(dir);
+  const unit=review.units[dir>0?'find':'findLast'](u=>dir>0?u>extra.unit:u<extra.unit);
+  if(unit===undefined)return;
+  extra.unit=unit;renderExtra();eGet('extraPage').scrollTo({top:0,behavior:'instant'});
+ };
 })();
 
 // Apply corrections before the final initial render; no progress data is stored.
