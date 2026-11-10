@@ -726,6 +726,90 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
 .subject-review-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:9px 0 14px;padding:10px 14px;border:1px solid #cfdfed;border-radius:12px;background:#f0f6ff;color:#465e8c;font-size:13px;font-weight:700}
 .subject-review-banner[hidden]{display:none!important}
 .subject-review-banner .subject-finish-action{min-height:34px;padding:6px 10px;font-size:12px}
+
+/* Saved-key editor + transferable snapshot code + Galaxy Tab S9 input layout */
+#keywordKeyEditor[hidden],#keywordTransferModal[hidden],#keywordImportOpen[hidden],#spenEnterFallback[hidden]{display:none!important}
+#keywordKeyEditor,#keywordTransferModal{position:fixed;inset:0;z-index:1850;background:#10172c9c;display:flex;align-items:center;justify-content:center;padding:14px;overscroll-behavior:contain}
+/* Expand saved-key editing to the full viewport, including Android tablets. */
+.key-edit-head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0}
+#keywordKeyEditor.is-maximized,#keywordKeyEditor:fullscreen{padding:0!important;background:#fff!important}
+#keywordKeyEditor.is-maximized .key-edit-dialog,#keywordKeyEditor:fullscreen .key-edit-dialog{width:100%!important;max-width:none!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important;box-shadow:none!important}
+#keywordKeyEditor.is-maximized .key-edit-content,#keywordKeyEditor:fullscreen .key-edit-content{flex:1;min-height:0}
+@media(max-width:760px){.key-edit-head-actions{gap:5px}.key-edit-head-actions .btn{font-size:11px!important;padding:7px 9px!important}}
+.key-edit-dialog,.key-transfer-dialog{width:min(1130px,100%);max-height:calc(100dvh - 28px);display:flex;flex-direction:column;min-height:0;background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 18px 65px #07172a48}
+.key-transfer-dialog{width:min(760px,100%)}
+.key-edit-header,.key-transfer-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 21px;border-bottom:1px solid #e6eaf2}
+.key-edit-header h3,.key-transfer-header h3{margin:0;font-size:19px;line-height:1.35;overflow-wrap:anywhere}
+.key-edit-header p{margin:3px 0 0;font-size:12px;color:#68758d}
+.key-edit-toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:end;padding:13px 18px;background:#f4f7ff;border-bottom:1px solid #e3e9f5}
+.key-edit-toolbar label{flex:1 1 170px;display:flex;flex-direction:column;gap:4px;font-weight:750;font-size:12px;color:#5d6c86}
+.key-edit-toolbar select{max-width:100%;min-width:0;padding:10px;border:1px solid #cfd9eb;border-radius:9px;font:inherit;background:#fff;color:#273554}
+.key-edit-content{padding:12px 19px;overflow-y:auto;flex:1;min-height:0;overscroll-behavior:contain}
+.key-edit-help,.key-transfer-help{font-size:12px;color:#637089;line-height:1.7;margin:3px 0 14px}
+.key-edit-group{margin:0 0 17px;border:1px solid #dfe6f2;border-radius:11px;overflow:hidden}
+.key-edit-group h4{margin:0;padding:10px 13px;background:#edf2fb;color:#35466b;font-size:13px}
+.key-edit-item{padding:13px;border-top:1px solid #e9edf5}
+.key-edit-item-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;color:#72809b;font-size:11px;margin-bottom:8px}
+.key-edit-sentence{font-size:14px;line-height:2;white-space:pre-wrap;overflow-wrap:anywhere;user-select:text;-webkit-user-select:text;color:#283248;background:#fafbff;padding:10px 12px;border:1px solid #e8ecf5;border-radius:8px}
+.key-edit-sentence mark{background:#c5efd7;color:#13784c;border-bottom:2px solid #4aa677;cursor:pointer;border-radius:3px}
+.key-edit-sentence::selection,.key-edit-sentence *::selection{background:#bdd3ff}
+.key-edit-row-actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap;align-items:center}
+.key-edit-row-actions input{min-width:145px;flex:1 1 180px;border:1px solid #d6deed;border-radius:8px;padding:9px 11px;font:inherit;font-size:13px}
+.key-edit-row-actions .btn{min-height:36px!important}
+.key-edit-footer,.key-transfer-footer{display:flex;justify-content:flex-end;align-items:center;gap:9px;flex-wrap:wrap;border-top:1px solid #e6eaf2;padding:13px 18px;background:#fff}
+.key-edit-status,.key-transfer-status{color:#4d638c;font-size:12px;margin-right:auto;line-height:1.5}
+.key-transfer-body{padding:19px;min-height:0;overflow-y:auto}
+.key-transfer-body textarea{width:100%;height:min(33dvh,245px);min-height:130px;resize:vertical;box-sizing:border-box;padding:12px;border-radius:9px;border:1px solid #cbd5e6;background:#f9fbff;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}
+.key-transfer-body textarea:focus{outline:2px solid #859cef;outline-offset:1px}
+.keyword-entry-title[data-key-edit]{cursor:pointer;color:#314fb8;text-decoration:underline;text-underline-offset:3px}
+.keyword-entry-actions{flex-wrap:wrap;justify-content:flex-end}
+#keywordImportOpen{margin-right:auto}
+#spenEnterFallback{position:fixed;right:19px;bottom:calc(19px + env(safe-area-inset-bottom));z-index:175;border:1px solid #354c9d;background:#4257b2;color:white;padding:12px 20px;min-height:49px;border-radius:999px;box-shadow:0 7px 19px #1e2f7a40;font-size:14px;font-weight:850}
+@media (min-width:700px) and (max-width:1400px) and (any-pointer:coarse){
+ .app,.content-app,#extraPage{width:calc(100% - 26px);max-width:none}
+ .mode-switch{min-height:60px!important;height:auto!important;padding:0 10px!important}
+ .mode-switch button{min-height:54px!important;font-size:12px!important;padding-inline:11px!important}
+ .table-toolbar{align-items:flex-start;gap:8px}
+ .table-tools{display:flex;flex-wrap:wrap;gap:7px}
+ .table-tools .btn,.extra-controls button,.study-picker select,.btn{min-height:44px!important}
+ .extra-data-row{padding:12px 13px}
+ .content-mask-sentence,.extra-mask-sentence{font-size:15px;line-height:2.45}
+ .inline-blank{min-height:40px;font-size:15px!important}
+ .editor-overlay{padding:10px!important}
+ .editor-steps{overflow-x:auto}
+ #contentPage .source-panel{width:min(550px,65vw)!important}
+}
+@media (max-width:760px){
+ #keywordKeyEditor,#keywordTransferModal{padding:5px;align-items:stretch}
+ .key-edit-dialog,.key-transfer-dialog{max-height:calc(100dvh - 10px);border-radius:10px}
+ .key-edit-header,.key-transfer-header{padding:12px}
+ .key-edit-header h3,.key-transfer-header h3{font-size:16px}
+ .key-edit-toolbar{gap:7px;padding:10px}
+ .key-edit-toolbar label{flex-basis:calc(50% - 7px)}
+ .key-edit-content{padding:9px}
+ .key-edit-item{padding:10px}
+ .key-edit-sentence{font-size:13px}
+ .key-edit-footer,.key-transfer-footer{padding:10px;gap:6px}
+ .key-edit-status{flex-basis:100%}
+ .keyword-entry{align-items:flex-start}
+ .keyword-entry-actions{max-width:65%;gap:4px}
+ .keyword-entry-actions .btn{font-size:11px!important;padding:6px 8px!important;min-height:35px!important}
+ #spenEnterFallback{bottom:12px;right:12px}
+}
+
+
+/* User-created keyword sets: editable in-place KW1 import without overwriting other keys. */
+#keywordCreateOpen[hidden],#keyEditPastePanel[hidden],#keywordImportOpen[hidden]{display:none!important}
+#keywordCreateOpen{margin-left:auto}
+#keywordListModal .panel > div:first-child{flex-wrap:wrap}
+.key-edit-import-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 18px;background:#fff;border-bottom:1px solid #e8edf5}
+.key-edit-import-bar span{font-size:12px;color:#67748e}
+.key-edit-paste-panel{padding:15px 18px;background:#f7f9ff;border-bottom:1px solid #d9e2f4}
+.key-edit-paste-panel label{display:block;margin-bottom:7px;font-size:13px;font-weight:800;color:#37476d}
+.key-edit-paste-panel textarea{display:block;box-sizing:border-box;width:100%;height:125px;min-height:75px;resize:vertical;line-height:1.45;font-size:12px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;border:1px solid #c9d5ea;border-radius:9px;padding:11px;background:#fff;color:#253650;overflow-wrap:anywhere}
+.key-edit-paste-actions{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:9px}
+#keyEditPasteStatus{font-size:12px;color:#4c6590;overflow-wrap:anywhere;min-width:0}
+@media(max-width:760px){.key-edit-import-bar{padding:9px;gap:5px}.key-edit-import-bar span{font-size:11px}.key-edit-paste-panel{padding:10px}.key-edit-paste-panel textarea{height:90px}.key-edit-paste-actions>.btn{width:100%}}
 </style></head><body>
 <nav class="mode-switch" id="modeSwitch" aria-label="학습 모드 선택"><a class="brand" id="brandHome" href="#contents" aria-label="정보과 교육과정 처음 화면으로 이동">정보과 교육과정</a>
 <button type="button" id="modeContent" class="active">내용체계표 공부</button>
@@ -848,7 +932,7 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
  <aside id="extraSourcePanel" hidden><div class="extra-source-top"><strong id="extraSourceName">PDF 원문</strong><button id="extraSourceZoom" type="button">확대/축소</button><button id="extraSourceClose" type="button">닫기 ×</button></div><div class="extra-source-scroll"><img id="extraPdfImage" alt="업로드한 PDF의 해당 단원 원문 전체 페이지"></div></aside><button id="extraSourceShade" class="extra-source-shade" type="button" aria-label="원문 닫기"></button>
  <div id="personalTextOverlay" hidden><div class="personal-box"><h3>성격 및 목표 · 원문 입력</h3><p>이 항목은 업로드된 PDF에 없습니다. 사용할 교과의 원문을 문단마다 한 줄씩 넣어주세요. 다른 페이지와 동일하게 키워드를 지정할 수 있습니다.</p><textarea id="personalText" placeholder="원문을 문단마다 한 줄씩 붙여넣으세요."></textarea><div class="personal-actions"><button type="button" id="closePersonalText">취소</button><button type="button" class="save" id="savePersonalText">저장하고 학습</button></div></div></div>
 </div>
-<div id="keywordProfileModal" class="editor-overlay" role="dialog" aria-modal="true" aria-label="키워드 프로필" hidden style="z-index:1500;display:flex;align-items:center;justify-content:center;background:#10172c66">
+<div id="keywordProfileModal" class="editor-overlay" role="dialog" aria-modal="true" aria-label="키워드 프로필" hidden style="z-index:1750;display:flex;align-items:center;justify-content:center;background:#10172c66">
  <div class="panel" style="width:min(410px,calc(100% - 32px));padding:24px;background:white"><h3 id="profileModalTitle" style="margin:0 0 13px">내 키워드</h3>
  <label for="profileSaveKey" style="display:block;margin-bottom:8px">저장키</label>
  <input id="profileSaveKey" type="text" autocomplete="off" style="width:100%;padding:12px;border:1px solid #a9b4c6;border-radius:9px;font-size:16px" placeholder="저장키 이름 입력">
@@ -857,11 +941,40 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
  </div></div>
 <div id="keywordListModal" role="dialog" aria-modal="true" aria-label="키워드 목록" hidden style="position:fixed;inset:0;z-index:1600;display:flex;align-items:center;justify-content:center;background:#10172c66;padding:16px">
  <div class="panel" style="width:min(760px,100%);max-height:min(85vh,850px);display:flex;flex-direction:column;overflow:hidden;background:white;padding:20px;border-radius:14px">
-  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3 id="keywordListTitle" style="margin:0">키워드 목록</h3><button class="btn" type="button" id="keywordListClose">닫기 ✕</button></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3 id="keywordListTitle" style="margin:0">키워드 목록</h3><button class="btn primary" type="button" id="keywordCreateOpen">+ 새 키워드 만들기</button><button class="btn" type="button" id="keywordImportOpen" hidden>코드 가져오기</button><button class="btn" type="button" id="keywordListClose">닫기 ✕</button></div>
   <p id="keywordListHint" style="font-size:12px;color:var(--sub);margin:8px 0"></p>
   <div id="keywordListItems" style="overflow-y:auto;overscroll-behavior:contain;flex:1;min-height:100px;padding:4px 2px"></div>
  </div>
 </div>
+
+
+<!-- Each saved key edits a private draft; it never writes to the active study keyword maps. -->
+<div id="keywordKeyEditor" role="dialog" aria-modal="true" aria-labelledby="keyEditTitle" hidden>
+ <div class="key-edit-dialog">
+  <div class="key-edit-header"><div><h3 id="keyEditTitle">저장키 편집</h3><p>선택한 저장키의 과목별 키워드만 바뀝니다. 현재 학습 설정과 다른 저장키에는 영향을 주지 않습니다.</p></div><div class="key-edit-head-actions"><button id="keyEditFullscreen" type="button" class="btn" aria-pressed="false">⛶ 전체화면</button><button id="keyEditClose" type="button" class="btn">✕ 닫기</button></div></div>
+  <div class="key-edit-toolbar">
+   <label>학습 종류 <select id="keyEditMode"></select></label>
+   <label>과목 <select id="keyEditCourse"></select></label>
+   <label>단원 <select id="keyEditUnit"></select></label>
+  </div>
+  <div class="key-edit-import-bar"><button id="keyEditPasteToggle" type="button" class="btn">📋 KW1 공유 코드 붙여넣기</button><span>붙여넣은 내용은 이 저장키의 수정 초안에만 반영됩니다.</span></div>
+  <div id="keyEditPastePanel" class="key-edit-paste-panel" hidden>
+   <label for="keyEditPasteText">다른 브라우저에서 복사한 KW1 공유 코드</label>
+   <textarea id="keyEditPasteText" spellcheck="false" placeholder="KW1. 으로 시작하는 코드 전체를 여기에 붙여넣으세요."></textarea>
+   <div class="key-edit-paste-actions"><span id="keyEditPasteStatus" role="status"></span><button id="keyEditPasteApply" type="button" class="btn primary">이 키워드 목록으로 불러오기</button></div>
+  </div>
+  <div id="keyEditContent" class="key-edit-content"></div>
+  <div class="key-edit-footer"><span class="key-edit-status" id="keyEditStatus" role="status">초록색 키워드를 누르면 해제됩니다.</span><button id="keyEditCancel" type="button" class="btn">취소</button><button id="keyEditSave" type="button" class="btn primary">이 저장키에만 저장</button></div>
+ </div>
+</div>
+<div id="keywordTransferModal" role="dialog" aria-modal="true" aria-labelledby="keywordTransferTitle" hidden>
+ <div class="key-transfer-dialog">
+  <div class="key-transfer-header"><h3 id="keywordTransferTitle">키워드 공유 코드</h3><button type="button" id="keywordTransferClose" class="btn">✕ 닫기</button></div>
+  <div class="key-transfer-body"><p class="key-transfer-help" id="keywordTransferHelp"></p><textarea id="keywordTransferText" spellcheck="false" aria-label="키워드 공유 코드"></textarea></div>
+  <div class="key-transfer-footer"><span class="key-transfer-status" role="status" id="keywordTransferStatus"></span><button type="button" class="btn" id="keywordTransferCancel">닫기</button><button type="button" class="btn primary" id="keywordTransferAction">코드 복사</button></div>
+ </div>
+</div>
+<button id="spenEnterFallback" type="button" hidden title="S펜 측면 버튼 신호를 브라우저가 전달하지 않을 때 이 버튼을 사용하세요" aria-label="현재 답안 채점 후 다음 칸으로 이동">↵ 채점 · 다음 칸</button>
 
 <div id="answerEditModal" role="dialog" aria-modal="true" aria-label="답안수정" hidden>
   <div class="answer-edit-dialog">
@@ -1718,7 +1831,18 @@ initContentMask();initExtraUI();
 
 /* Requested keyword profiles, scope selectors, complete-answer toggles */
 const PROFILE_STORE='curriculum_keyword_profiles_local_v1';
+// Saved-key profiles are user-created only. Never auto-create or rename 1220/4018.
 let profileMap={};try{profileMap=JSON.parse(localStorage.getItem(PROFILE_STORE)||'{}')||{}}catch(e){}
+if(!profileMap||typeof profileMap!=='object'||Array.isArray(profileMap))profileMap={};
+// Earlier HTML versions inserted empty guide entries for 1220/4018.
+// Remove only those synthetic placeholders; never delete a profile containing real keyword data.
+for(const [name,profile] of Object.entries(profileMap)){
+ if(profile && (profile.__needsSource==='1220'||profile.__needsSource==='4018') &&
+   !Object.keys(profile.content||{}).length && !Object.keys(profile.other||{}).length){
+  delete profileMap[name];
+  try{localStorage.setItem(PROFILE_STORE,JSON.stringify(profileMap))}catch(e){console.warn('빈 기본 항목 정리 실패:',e)}
+ }
+}
 let profileAction='save',profileScope=null;
 function profileScopeFromContent(){return {course:CONTENT_EDIT_STATE.scopeCourse,unit:CONTENT_EDIT_STATE.scopeUnit,mode:'all'};}
 function profileScopeFromExtra(){return {course:extraScopeCourse,unit:extraScopeUnit,mode:'all'};}
@@ -1742,23 +1866,25 @@ function fullKeywordSnapshot(scope){
  }
  return {content,other,scope};
 }
-function saveProfileStore(){try{localStorage.setItem(PROFILE_STORE,JSON.stringify(profileMap))}catch(e){eGet('profileStatus').textContent='브라우저 저장 공간을 사용할 수 없습니다.';}}
+function saveProfileStore(){try{localStorage.setItem(PROFILE_STORE,JSON.stringify(profileMap));return true;}catch(e){const label=eGet('profileStatus');if(label)label.textContent='브라우저 저장 공간이 부족합니다. 저장키를 저장하지 못했습니다.';return false;}}
 function closeKeywordRegister(){eGet('keywordProfileModal').hidden=true;}
 function showKeywordProfile(action,scope){
- profileAction='save';profileScope=scope;
- eGet('profileModalTitle').textContent='키워드 등록';eGet('profileSubmit').textContent='등록';
- eGet('profileStatus').textContent='저장키 이름으로 이 브라우저에 보관됩니다. 같은 저장키는 새 키워드로 갱신합니다.';
+ profileAction=action;profileScope=scope;
+ eGet('profileModalTitle').textContent=action==='blank'?'새 키워드 목록 만들기':'키워드 등록';eGet('profileSubmit').textContent='만들기';
+ eGet('profileStatus').textContent=action==='blank'?'빈 키워드 목록을 만든 다음 공유 코드를 넣거나 직접 수정할 수 있어요.':'새 이름으로 등록됩니다. 기존 저장키는 키워드 목록에서 직접 수정하세요.';
  eGet('profileSaveKey').value='';eGet('keywordProfileModal').hidden=false;eGet('profileSaveKey').focus();
 }
 function applyKeywordProfile(){
  const name=eGet('profileSaveKey').value.trim();
  if(!name){eGet('profileStatus').textContent='저장키 이름을 입력하세요.';return;}
- const snapshot=fullKeywordSnapshot(profileScope),previous=profileMap[name];
- profileMap[name]=previous?{
-  content:{...(previous.content||{}),...snapshot.content},
-  other:{...(previous.other||{}),...snapshot.other},scope:snapshot.scope
- }:snapshot;
- saveProfileStore();closeKeywordRegister();
+ if(Object.prototype.hasOwnProperty.call(profileMap,name)){
+  eGet('profileStatus').textContent='이미 있는 저장키입니다. 기존 키를 덮어쓰지 않습니다. 키워드 목록에서 해당 키를 눌러 수정하세요.';return;
+ }
+ const snapshot=profileAction==='blank'?{content:{},other:{},scope:{course:-1,unit:-1,mode:'all'}}:fullKeywordSnapshot(profileScope);
+ profileMap[name]=snapshot;
+ if(!saveProfileStore()){delete profileMap[name];return;}
+ closeKeywordRegister();
+ if(profileAction==='blank')openSavedKeyEditor(name);
 }
 function refreshKeywordViews(){
  contentSaveCustom();saveExtraMarks();
@@ -1781,6 +1907,7 @@ function makeKeywordEntry(title,subtitle,buttons){
 }
 function applySavedKeyword(name){
  const saved=profileMap[name];if(!saved)return;
+ if(saved.__needsSource){alert('이 브라우저에는 '+saved.__needsSource+'의 원본 키워드 데이터가 없습니다. 원본 공유 코드를 먼저 가져오세요.');return;}
  let count=0;
  // Retain earlier cross-mode application semantics for the selected scope.
  for(const [key,ranges] of Object.entries(saved.content||{}))if(scopeAllowsContent(keywordListScope,key)){
@@ -1833,21 +1960,24 @@ function currentKeywordEntries(){
 function renderKeywordList(){
  const root=eGet('keywordListItems');root.replaceChildren();
  if(keywordListType==='saved'){
-  eGet('keywordListTitle').textContent='키워드 목록';
-  eGet('keywordListHint').textContent='저장키별로 키워드를 적용하거나 삭제할 수 있습니다. 저장키는 이 브라우저에만 보관됩니다.';
+  eGet('keywordListTitle').textContent='키워드 목록';eGet('keywordImportOpen').hidden=true;eGet('keywordCreateOpen').hidden=false;
+  eGet('keywordListHint').textContent='새 키워드를 만든 뒤 수정창에서 KW1 코드를 붙여넣거나 문장을 드래그해 키워드를 지정하세요. 저장키마다 내용은 따로 보관됩니다.';
   const names=Object.keys(profileMap).sort((a,b)=>a.localeCompare(b,'ko'));
-  if(!names.length){const empty=document.createElement('p');empty.className='keyword-entry-empty';empty.textContent='등록된 저장키가 없습니다.';root.append(empty);}
+  if(!names.length){const empty=document.createElement('p');empty.className='keyword-entry-empty';empty.textContent='아직 만든 키워드 목록이 없어요. 위의 ‘+ 새 키워드 만들기’를 눌러 시작하세요.';root.append(empty);}
   for(const name of names){
    const value=profileMap[name],cnt=keywordListSource==='content'
     ?Object.keys(value.content||{}).filter(key=>scopeAllowsContent(keywordListScope,key)).length
     :Object.keys(value.other||{}).filter(key=>key.startsWith(extra.mode+':')&&scopeAllowsExtra(keywordListScope,key)).length;
-   root.append(makeKeywordEntry(name,`현재 선택한 범위: ${cnt}개 문항`,[
-    ['키워드 적용',()=>applySavedKeyword(name)],
-    ['키워드 삭제',()=>{if(!confirm('저장키 “'+name+'”를 삭제할까요?'))return;delete profileMap[name];saveProfileStore();renderKeywordList();}]
-   ]));
+   const description=`현재 선택한 범위: ${cnt}개 문항`;
+   const actions=[['수정',()=>openSavedKeyEditor(name)],['코드 복사',()=>openKeywordTransfer('export',name)],['키워드 적용',()=>applySavedKeyword(name)]];
+   actions.push(['키워드 삭제',()=>{if(!confirm('저장키 “'+name+'”를 삭제할까요?'))return;const prior=profileMap[name];delete profileMap[name];if(!saveProfileStore())profileMap[name]=prior;renderKeywordList();}]);
+   const entry=makeKeywordEntry(name,description,actions);
+   const title=entry.querySelector('.keyword-entry-title');title.dataset.keyEdit=name;title.tabIndex=0;title.setAttribute('role','button');title.setAttribute('aria-label',`${name} 저장키 수정`);
+   title.onclick=()=>openSavedKeyEditor(name);title.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openSavedKeyEditor(name);}};
+   root.append(entry);
   }
  }else{
-  eGet('keywordListTitle').textContent='현재 키워드 목록';
+  eGet('keywordListTitle').textContent='현재 키워드 목록';eGet('keywordImportOpen').hidden=true;eGet('keywordCreateOpen').hidden=true;
   eGet('keywordListHint').textContent='현재 설정된 키워드를 확인하고 개별 삭제할 수 있습니다.';
   const entries=currentKeywordEntries();
   if(!entries.length){const empty=document.createElement('p');empty.className='keyword-entry-empty';empty.textContent='현재 선택된 범위에 키워드가 없습니다.';root.append(empty);}
@@ -1857,6 +1987,7 @@ function renderKeywordList(){
 function openKeywordList(type,source,scope){keywordListType=type;keywordListSource=source;keywordListScope=scope;renderKeywordList();eGet('keywordListModal').hidden=false;}
 eGet('keywordListClose').onclick=keywordListClose;
 eGet('keywordListModal').addEventListener('click',e=>{if(e.target===e.currentTarget)keywordListClose();});
+eGet('keywordCreateOpen').onclick=()=>showKeywordProfile('blank',{course:-1,unit:-1,mode:'all'});
 eGet('profileCancel').onclick=closeKeywordRegister;
 eGet('profileSubmit').onclick=applyKeywordProfile;
 eGet('profileSaveKey').onkeydown=e=>{if(e.key==='Enter')applyKeywordProfile();if(e.key==='Escape')closeKeywordRegister();};
@@ -2379,6 +2510,260 @@ function subjectShowCourseRetry(kind,course){
   if(unit===undefined)return;
   extra.unit=unit;renderExtra();eGet('extraPage').scrollTo({top:0,behavior:'instant'});
  };
+})();
+
+
+/* Independent saved-key editor and portable share-code exchange (version 1). */
+(function(){
+ const byId=id=>document.getElementById(id);
+ const root=byId('keywordKeyEditor'),fieldRoot=byId('keyEditContent');
+ const edit={name:null,draft:null,mode:'content',course:0,unit:0,dirty:false};
+ const DEEP=x=>JSON.parse(JSON.stringify(x));
+ const allModes=[['content','내용체계표'],...Object.entries(EXTRA_MODES).map(([id,label])=>[id,label])];
+ const lastModeWithData=snapshot=>{
+  if(Object.keys(snapshot.content||{}).length)return 'content';
+  const first=Object.keys(snapshot.other||{})[0];return first?.split(':')[0]||'content';
+ };
+ const modeObject=()=>edit.mode==='content'?edit.draft.content:edit.draft.other;
+ const matchKeyCourse=(key,mode)=>mode==='content'?Number(key.split('/')[0]):Number(key.split(':')[1]);
+ const matchKeyUnit=(key,mode)=>mode==='content'?Number(key.split('/')[1]):Number(key.split(':')[2]);
+ const modeKeys=mode=>Object.keys(mode==='content'?edit.draft.content:edit.draft.other).filter(key=>mode==='content'||key.startsWith(mode+':'));
+ const firstSavedCourse=mode=>{const key=modeKeys(mode)[0];return key?matchKeyCourse(key,mode):0;};
+ const firstSavedUnit=(mode,course)=>{const key=modeKeys(mode).find(k=>matchKeyCourse(k,mode)===course);return key?matchKeyUnit(key,mode):0;};
+ function normalizeRanges(ranges,max){
+  const clean=(Array.isArray(ranges)?ranges:[]).filter(r=>Array.isArray(r)&&r.length===2&&Number.isInteger(r[0])&&Number.isInteger(r[1])&&r[0]>=0&&r[1]>r[0]&&r[1]<=max).map(r=>[...r]).sort((a,b)=>a[0]-b[0]);
+  const result=[];for(const range of clean){const prev=result.at(-1);if(prev&&range[0]<=prev[1])prev[1]=Math.max(prev[1],range[1]);else result.push(range)}return result;
+ }
+ function renderSelectors(){
+  const selectMode=byId('keyEditMode');selectMode.replaceChildren();
+  allModes.forEach(([id,label])=>{const option=document.createElement('option');option.value=id;option.textContent=label;selectMode.append(option)});selectMode.value=edit.mode;
+  const selectCourse=byId('keyEditCourse');selectCourse.replaceChildren();
+  CONTENT_COURSES.forEach((label,index)=>{const option=document.createElement('option');option.value=index;option.textContent=label;selectCourse.append(option)});selectCourse.value=String(edit.course);
+  const selectUnit=byId('keyEditUnit');selectUnit.replaceChildren();
+  const total=edit.mode==='content'||edit.mode==='standardsStudy'?contentUnitsOf(edit.course).length:1;
+  for(let i=0;i<total;i++){const option=document.createElement('option');option.value=i;option.textContent=edit.mode==='content'||edit.mode==='standardsStudy'?`${i+1}단원 · ${contentUnitsOf(edit.course)[i]?.name||''}`:'전체 내용';selectUnit.append(option)}
+  edit.unit=Math.min(edit.unit,total-1);selectUnit.value=String(edit.unit);
+ }
+ function collectRows(){
+  if(edit.mode==='content'){
+   const unit=contentUnitsOf(edit.course)[edit.unit];let id=0;
+   const result=[];for(const type of CONTENT_TYPES){const items=type==='T'?[unit.name]:unit[type];
+    for(const raw of items){result.push({group:CONTENT_LABELS[type],label:`${CONTENT_LABELS[type]} ${id+1}`,key:contentId(edit.course,edit.unit,id++),raw:contentText(raw)})}}
+   return result;
+  }
+  const doc=getAnswerExtraDocument(edit.mode,edit.course,edit.unit);const result=[];
+  doc?.sections?.forEach((section,si)=>section.rows.forEach((raw,ri)=>result.push({group:section.title,label:`${section.title} ${ri+1}`,key:`${edit.mode}:${edit.course}:${edit.unit}:${si}:${ri}`,raw})));
+  return result;
+ }
+ function updateStatus(msg){byId('keyEditStatus').textContent=msg|| (edit.dirty?'변경사항이 아직 저장되지 않았습니다.':'저장키의 과목별 설정을 수정할 수 있습니다.');}
+ function setRanges(row,newRanges){modeObject()[row.key]=normalizeRanges(newRanges,row.raw.length);edit.dirty=true;renderRows();updateStatus();}
+ function renderRows(){
+  const previousScroll=fieldRoot.scrollTop;fieldRoot.replaceChildren();
+  const help=document.createElement('p');help.className='key-edit-help';help.textContent='문장에서 원하는 부분을 펜·마우스로 드래그하면 바로 키워드로 지정됩니다. 초록색 키워드를 누르거나 우클릭하면 해제됩니다. 저장하기 전까지 다른 목록에는 적용되지 않습니다.';fieldRoot.append(help);
+  const rows=collectRows(),objects=modeObject();let current=null,container=null;
+  for(const row of rows){
+   if(row.group!==current){current=row.group;container=document.createElement('section');container.className='key-edit-group';const header=document.createElement('h4');header.textContent=current;container.append(header);fieldRoot.append(container)}
+   const item=document.createElement('div');item.className='key-edit-item';const ranges=normalizeRanges(objects[row.key]||[],row.raw.length);
+   const meta=document.createElement('div');meta.className='key-edit-item-meta';meta.textContent=`${row.label} · ${Object.hasOwn(objects,row.key)?`저장된 키워드 ${ranges.length}개`:'이 과목/문항은 아직 저장되지 않음'}`;item.append(meta);
+   const sentence=document.createElement('div');sentence.className='key-edit-sentence';sentence.title='드래그해서 키워드 추가 / 초록색 영역을 누르면 삭제';
+   let pos=0;ranges.forEach(([start,end],i)=>{sentence.append(document.createTextNode(row.raw.slice(pos,start)));const mark=document.createElement('mark');mark.textContent=row.raw.slice(start,end);mark.title='누르거나 우클릭해 삭제';mark.addEventListener('click',e=>{e.stopPropagation();setRanges(row,ranges.filter((_,idx)=>idx!==i))});mark.addEventListener('contextmenu',e=>{e.preventDefault();e.stopPropagation();setRanges(row,ranges.filter((_,idx)=>idx!==i))});sentence.append(mark);pos=end});sentence.append(document.createTextNode(row.raw.slice(pos)));item.append(sentence);
+   const trySelected=()=>{const selected=contentEditorSelectedRange(sentence);if(!selected)return false;window.getSelection()?.removeAllRanges();setRanges(row,[...ranges,selected]);return true;};
+   sentence.addEventListener('mouseup',()=>{if(!window.getSelection()?.isCollapsed)trySelected()});
+    // Keep the saved-key editor compact: direct drag selection and tapping highlights only.
+    sentence.addEventListener('pointerup',e=>{if(e.pointerType==='pen'||e.pointerType==='touch')setTimeout(()=>{if(!root.hidden&&edit.name)trySelected()},60)});
+    container.append(item);
+  }
+  if(!rows.length){const empty=document.createElement('p');empty.className='key-edit-help';empty.textContent='해당 과목의 문항이 없습니다.';fieldRoot.append(empty)}
+  fieldRoot.scrollTop=previousScroll;
+ }
+ function openSavedKeyEditor(name){
+  const item=profileMap[name];if(!item)return;
+  edit.name=name;edit.draft=DEEP(item);edit.draft.content ||= {};edit.draft.other ||= {};edit.dirty=false;
+  edit.mode=lastModeWithData(edit.draft);edit.course=Math.min(CONTENT_COURSES.length-1,Math.max(0,firstSavedCourse(edit.mode)));edit.unit=firstSavedUnit(edit.mode,edit.course);
+  byId('keyEditTitle').textContent=`${name} · 키워드 직접 수정`;
+  renderSelectors();fieldRoot.scrollTop=0;renderRows();updateStatus();resetKeyEditorFullscreen();byId('keyEditPastePanel').hidden=true;byId('keyEditPasteText').value='';byId('keyEditPasteStatus').textContent='';byId('keyEditPasteToggle').textContent='📋 KW1 공유 코드 붙여넣기';root.hidden=false;
+ }
+ function closeSavedKeyEditor(){if(edit.dirty&&!confirm('저장하지 않은 수정사항이 있습니다. 취소할까요?'))return;resetKeyEditorFullscreen();root.hidden=true;edit.name=null;edit.draft=null;edit.dirty=false;}
+ function saveSavedKeyEditor(){
+  if(!edit.name||!edit.draft)return;
+  if(edit.draft.__needsSource){
+   if(!edit.dirty){updateStatus('원본 키워드가 없습니다. 키워드를 직접 수정하거나 원래 저장키의 공유 코드를 가져오세요.');return;}
+   delete edit.draft.__needsSource;
+  }
+  const previous=profileMap[edit.name];profileMap[edit.name]=edit.draft;
+  if(!saveProfileStore()){profileMap[edit.name]=previous;updateStatus('저장 공간 부족으로 실패했습니다. 공유 코드로 백업한 다음 저장 공간을 확인하세요.');return;}
+  resetKeyEditorFullscreen();root.hidden=true;edit.name=null;edit.draft=null;edit.dirty=false;renderKeywordList();
+ }
+  // Native browser fullscreen when allowed, with CSS full-window fallback.
+  const fullButton=byId('keyEditFullscreen');
+  function showKeyEditorFullscreen(value){
+   root.classList.toggle('is-maximized',Boolean(value));
+   fullButton.textContent=value?'↙ 창 크기로':'⛶ 전체화면';
+   fullButton.setAttribute('aria-pressed',String(Boolean(value)));
+  }
+  function resetKeyEditorFullscreen(){
+   showKeyEditorFullscreen(false);
+   if(document.fullscreenElement===root&&document.exitFullscreen)document.exitFullscreen().catch(()=>{});
+  }
+  fullButton.onclick=async()=>{
+   if(root.classList.contains('is-maximized')){resetKeyEditorFullscreen();return;}
+   showKeyEditorFullscreen(true);
+   if(root.requestFullscreen){try{await root.requestFullscreen()}catch(e){/* CSS fallback stays active. */}}
+  };
+  document.addEventListener('fullscreenchange',()=>{
+   if(!document.fullscreenElement&&root.classList.contains('is-maximized'))showKeyEditorFullscreen(false);
+  });
+ byId('keyEditMode').onchange=e=>{edit.mode=e.target.value;edit.course=Math.min(CONTENT_COURSES.length-1,Math.max(0,firstSavedCourse(edit.mode)));edit.unit=firstSavedUnit(edit.mode,edit.course);renderSelectors();fieldRoot.scrollTop=0;renderRows()};
+ byId('keyEditCourse').onchange=e=>{edit.course=Number(e.target.value);edit.unit=firstSavedUnit(edit.mode,edit.course);renderSelectors();fieldRoot.scrollTop=0;renderRows()};
+ byId('keyEditUnit').onchange=e=>{edit.unit=Number(e.target.value);fieldRoot.scrollTop=0;renderRows()};
+ byId('keyEditClose').onclick=byId('keyEditCancel').onclick=closeSavedKeyEditor;
+ byId('keyEditSave').onclick=saveSavedKeyEditor;
+ root.addEventListener('click',e=>{if(e.target===root)closeSavedKeyEditor()});
+ // Offline transfer: the code carries a complete snapshot (not a server link or live sync).
+ const transfer=byId('keywordTransferModal'),transferText=byId('keywordTransferText');let transferType='import';
+ const utf8=new TextEncoder(),decoder=new TextDecoder('utf-8',{fatal:true});
+ const toUrlB64=bytes=>{let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+ const fromUrlB64=str=>{if(!/^[a-zA-Z0-9_-]+$/.test(str)||str.length>4_000_000)throw Error('지원하지 않는 공유 코드입니다.');const binary=atob(str.replace(/-/g,'+').replace(/_/g,'/')+'='.repeat((4-str.length%4)%4));return Uint8Array.from(binary,c=>c.charCodeAt(0))};
+ async function makeCode(name){
+  let bytes=utf8.encode(JSON.stringify({kind:'KWPROFILE',version:1,name,profile:profileMap[name]}));let fmt='N';
+  if(typeof CompressionStream==='function'){
+   try{bytes=new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer());fmt='G';}catch(e){}
+  }
+  return 'KW1.'+fmt+'.'+toUrlB64(bytes);
+ }
+ function checkSnapshot(data){
+  if(!data||data.kind!=='KWPROFILE'||data.version!==1||typeof data.name!=='string'||!data.name.trim()||data.name.length>150||!data.profile||typeof data.profile!=='object')throw Error('올바른 키워드 공유 코드가 아닙니다.');
+  const result={content:{},other:{},scope:{course:-1,unit:-1,mode:'all'}};
+  for(const field of ['content','other']){
+   const source=data.profile[field];if(!source||typeof source!=='object'||Array.isArray(source))throw Error('저장된 과목 데이터 형식이 잘못됐습니다.');
+   const entries=Object.entries(source);if(entries.length>25000)throw Error('허용된 문항 수를 초과했습니다.');
+   for(const [key,ranges] of entries){
+    if(! (field==='content'? /^\d+\/\d+\/\d+$/.test(key):/^(standardsStudy|character|pedagogy):\d+:\d+:\d+:\d+$/.test(key))||!Array.isArray(ranges)||ranges.length>500||ranges.some(r=>!Array.isArray(r)||r.length!==2||!Number.isSafeInteger(r[0])||!Number.isSafeInteger(r[1])||r[0]<0||r[1]<=r[0]||r[1]>1000000))throw Error('키워드 위치 데이터가 잘못됐습니다.');
+    result[field][key]=ranges.map(r=>[r[0],r[1]]);
+   }
+  }
+  if(data.profile.scope&&typeof data.profile.scope==='object')result.scope=DEEP(data.profile.scope);
+  return result;
+ }
+ async function parseCode(code){
+  const found=code.trim().match(/^KW1\.(G|N)\.([a-zA-Z0-9_-]+)$/);if(!found)throw Error('KW1으로 시작하는 공유 코드를 붙여넣으세요.');
+  let bytes=fromUrlB64(found[2]);
+  if(found[1]==='G'){
+   if(typeof DecompressionStream!=='function')throw Error('이 브라우저는 압축 코드 해제를 지원하지 않습니다. 최신 Chrome 또는 Samsung Internet을 이용하세요.');
+   bytes=new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
+  }
+  if(bytes.length>8_000_000)throw Error('공유 데이터가 너무 큽니다.');
+  const data=JSON.parse(decoder.decode(bytes));return {name:data.name.trim(),profile:checkSnapshot(data)};
+ }
+ function setTransferStatus(msg){byId('keywordTransferStatus').textContent=msg;}
+ function openTransferPanel(type){transferType=type;transfer.hidden=false;transferText.value='';byId('keywordTransferTitle').textContent=type==='import'?'다른 브라우저의 키워드 가져오기':'저장키 공유 코드 복사';byId('keywordTransferAction').textContent=type==='import'?'새 저장키로 가져오기':'코드 복사';transferText.readOnly=type==='export';byId('keywordTransferHelp').textContent=type==='import'?'다른 브라우저에서 복사한 KW1 공유 코드를 붙여넣으세요. 같은 이름의 키가 있어도 기존 목록은 유지하며 새 이름으로 추가합니다.':'현재 저장키에 들어 있는 모든 과목의 키워드가 코드에 포함됩니다. 이 코드를 다른 브라우저에 붙여넣으면 독립적인 사본이 만들어집니다.';setTransferStatus('');}
+ async function openKeywordTransfer(type,name){
+  openTransferPanel(type);
+  if(type==='export'){
+   setTransferStatus('코드를 생성하는 중입니다.');
+   try{const code=await makeCode(name);if(transfer.hidden||transferType!=='export')return;transferText.value=code;setTransferStatus(`${name} · ${code.length.toLocaleString()}자 · 원본 저장키는 변경되지 않습니다.`);}catch(e){setTransferStatus('공유 코드 생성 실패: '+e.message)}
+  }else transferText.focus();
+ }
+ function closeTransfer(){transfer.hidden=true;transferText.value='';}
+ async function copyTransfer(){
+  if(!transferText.value){setTransferStatus('아직 복사할 코드가 없습니다.');return;}
+  let copied=false;try{await navigator.clipboard.writeText(transferText.value);copied=true;}catch(e){}
+  if(!copied){transferText.focus();transferText.select();try{copied=document.execCommand('copy')}catch(e){}}
+  setTransferStatus(copied?'코드를 복사했습니다. 다른 브라우저에서 코드 가져오기로 불러오세요.':'자동 복사가 막혔습니다. 코드 전체를 선택해 수동으로 복사하세요.');
+ }
+ async function importTransfer(){
+  const button=byId('keywordTransferAction');button.disabled=true;
+  try{
+   const data=await parseCode(transferText.value);
+   const requestedName=data.name;
+   let name=requestedName;
+   if(Object.hasOwn(profileMap,name)){
+    let index=2;while(Object.hasOwn(profileMap,`${requestedName} (가져옴 ${index})`))index++;
+    name=`${requestedName} (가져옴 ${index})`;
+   }
+   const prior=profileMap[name];profileMap[name]=data.profile;
+   if(!saveProfileStore()){
+    if(prior===undefined)delete profileMap[name];else profileMap[name]=prior;
+    throw Error('브라우저 저장 공간이 부족합니다. 기존 키는 변경되지 않았습니다.');
+   }
+   closeTransfer();renderKeywordList();alert(`“${name}” 키워드 목록을 가져왔습니다. 다른 저장키는 변경되지 않았습니다.`);
+  }catch(e){setTransferStatus('가져오기 실패: '+(e?.message||String(e)))}finally{button.disabled=false;}
+ }
+  byId('keyEditPasteToggle').onclick=()=>{
+   const panel=byId('keyEditPastePanel');panel.hidden=!panel.hidden;
+   byId('keyEditPasteToggle').textContent=panel.hidden?'📋 KW1 공유 코드 붙여넣기':'접기 ▲';
+   if(!panel.hidden)byId('keyEditPasteText').focus();
+  };
+  byId('keyEditPasteApply').onclick=async()=>{
+   if(!edit.name||!edit.draft)return;
+   const button=byId('keyEditPasteApply');button.disabled=true;
+   const status=byId('keyEditPasteStatus');status.textContent='코드를 확인하는 중입니다.';
+   try{
+    const imported=await parseCode(byId('keyEditPasteText').value);
+    const count=Object.keys(imported.profile.content).length+Object.keys(imported.profile.other).length;
+    const existing=Object.keys(edit.draft.content).length+Object.keys(edit.draft.other).length;
+    if((edit.dirty||existing>0) && !confirm('현재 “'+edit.name+'” 수정창에 있는 키워드를 붙여넣은 코드 내용으로 바꿀까요? (다른 저장키는 유지되며, 아래 저장 버튼 전까지 확정되지 않습니다.)')){
+     status.textContent='가져오기를 취소했습니다. 수정 중인 키워드는 유지됩니다.';return;
+    }
+    edit.draft={content:DEEP(imported.profile.content),other:DEEP(imported.profile.other),scope:{course:-1,unit:-1,mode:'all'}};
+    edit.dirty=true;
+    edit.mode=lastModeWithData(edit.draft);
+    edit.course=Math.min(CONTENT_COURSES.length-1,Math.max(0,firstSavedCourse(edit.mode)));
+    edit.unit=firstSavedUnit(edit.mode,edit.course);
+    renderSelectors();fieldRoot.scrollTop=0;renderRows();
+    status.textContent='“'+imported.name+'”의 '+count+'개 문항을 이 수정창에 불러왔습니다.';
+    updateStatus('공유 코드를 수정 초안에 불러왔습니다. 키워드를 수정한 후 ‘이 저장키에만 저장’을 누르세요.');
+    byId('keyEditPastePanel').hidden=true;
+    byId('keyEditPasteToggle').textContent='📋 KW1 공유 코드 붙여넣기';
+   }catch(e){status.textContent='불러오기 실패: '+(e?.message||String(e))}
+   finally{button.disabled=false;}
+  };
+ byId('keywordImportOpen').onclick=()=>openKeywordTransfer('import');
+ byId('keywordTransferAction').onclick=()=>transferType==='export'?copyTransfer():importTransfer();
+ byId('keywordTransferClose').onclick=byId('keywordTransferCancel').onclick=closeTransfer;
+ transfer.addEventListener('click',e=>{if(e.target===transfer)closeTransfer()});
+ window.openSavedKeyEditor=openSavedKeyEditor;window.openKeywordTransfer=openKeywordTransfer;
+ // S Pen barrel events may be reported as button=2, but Air Actions are not available to plain browser JS.
+ const enterButton=byId('spenEnterFallback');let lastBarrelAt=0;
+ function studyField(){
+  const selectors=byId('contentPage').classList.contains('hidden')
+   ?(byId('extraPage').classList.contains('hidden')?null:(extra.edit?null:'.inline-blank,textarea.extra-input'))
+   :(!byId('contentSettingsOverlay').hidden?null:'.inline-blank,textarea.table-input');
+  if(!selectors)return null;
+  const page=byId('contentPage').classList.contains('hidden')?byId('extraPage'):byId('contentPage');
+  const fields=[...page.querySelectorAll(selectors)].filter(el=>!el.disabled&&el.offsetWidth>0&&el.offsetHeight>0);
+  return fields.find(el=>el===document.activeElement)||fields[0]||null;
+ }
+ function runStudyEnter(){
+  if(!byId('keywordKeyEditor').hidden||!byId('keywordTransferModal').hidden||!byId('keywordProfileModal').hidden||!byId('keywordListModal').hidden||!byId('answerEditModal').hidden)return;
+  const field=studyField();if(!field)return;
+  if(document.activeElement!==field)field.focus({preventScroll:true});
+  const event=new KeyboardEvent('keydown',{key:'Enter',code:'Enter',bubbles:true,cancelable:true});field.dispatchEvent(event);
+ }
+ function barrelInput(e){
+  if(e.pointerType!=='pen')return;
+  if(e.button!==2 && !(e.buttons&2))return;
+  if(Date.now()-lastBarrelAt<350)return;
+  if(!studyField())return;
+  lastBarrelAt=Date.now();e.preventDefault();runStudyEnter();
+ }
+ document.addEventListener('pointerdown',barrelInput,true);
+ document.addEventListener('pointermove',e=>{if(e.pointerType==='pen'&&(e.buttons&2))barrelInput(e)},true);
+ document.addEventListener('contextmenu',e=>{
+  if(e.pointerType!=='pen'||!studyField())return;
+  if(Date.now()-lastBarrelAt>350){lastBarrelAt=Date.now();runStudyEnter();}
+  e.preventDefault();
+ },true);
+ enterButton.onclick=runStudyEnter;
+ function refreshEnterButton(){
+  const tablet=window.matchMedia('(any-pointer:coarse) and (min-width:650px)').matches;
+  const visible=tablet&&( !byId('contentPage').classList.contains('hidden')&&byId('contentSettingsOverlay').hidden || !byId('extraPage').classList.contains('hidden')&&!extra.edit );
+  enterButton.hidden=!visible;
+ }
+ const modeObserver=new MutationObserver(refreshEnterButton);
+ for(const node of [byId('contentPage'),byId('extraPage'),byId('contentSettingsOverlay')])modeObserver.observe(node,{attributes:true,attributeFilter:['class','hidden']});
+ window.addEventListener('resize',refreshEnterButton);refreshEnterButton();
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!transfer.hidden){e.stopPropagation();closeTransfer()}else if(!root.hidden){e.stopPropagation();closeSavedKeyEditor()}}},true);
 })();
 
 // Apply corrections before the final initial render; no progress data is stored.
