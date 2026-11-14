@@ -657,7 +657,7 @@ body.extra-toc-open .extra-backdrop{display:block}
 body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStudyPicker,#extraPage:fullscreen #extraStudyPicker{display:none!important}
 @media(max-width:650px){.study-picker label{flex:1 1 160px}.study-picker select{width:100%;min-width:0}}
 #keywordProfileModal[hidden],#keywordListModal[hidden]{display:none!important}
-.keyword-entry{padding:10px 4px;border-bottom:1px solid #e9edf5;display:flex;align-items:center;justify-content:space-between;gap:12px}.keyword-entry-title{font-size:13px;font-weight:600;overflow-wrap:anywhere}.keyword-entry-subtitle{font-size:12px;color:var(--sub);overflow-wrap:anywhere}.keyword-entry-actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}.keyword-entry-actions .btn{white-space:nowrap}.keyword-entry-empty{color:var(--sub);font-size:13px;padding:18px 0}
+.keyword-entry{padding:10px 4px;border-bottom:1px solid #e9edf5;display:flex;align-items:center;justify-content:space-between;gap:12px}.keyword-entry-title{font-size:13px;font-weight:600;overflow-wrap:anywhere}.keyword-entry-subtitle{font-size:12px;color:var(--sub);overflow-wrap:anywhere}.keyword-entry-actions{display:flex;gap:6px;flex-shrink:0}.keyword-entry-actions .btn{white-space:nowrap}.keyword-entry-empty{color:var(--sub);font-size:13px;padding:18px 0}
 
 /* Small, scoped UI adjustments: current input mode and identical highlighted keyword styling */
 #contentMaskBtn.keyword-mode-active,#extraMaskBtn.keyword-mode-active{
@@ -798,10 +798,6 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
 }
 
 
-/* Tablet/Pencil study navigation: an outlined next field without triggering the OS keyboard. */
-.study-next-target{outline:3px solid #627fe8!important;outline-offset:3px!important;background:#f0f4ff!important;box-shadow:0 0 0 5px #a6bafb30!important;transition:background .15s,outline-color .15s}
-#spenEnterFallback{touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;cursor:pointer}
-@media (pointer:coarse){#spenEnterFallback{min-height:58px;padding:13px 24px;font-size:15px;font-weight:850}}
 /* User-created keyword sets: editable in-place KW1 import without overwriting other keys. */
 #keywordCreateOpen[hidden],#keyEditPastePanel[hidden],#keywordImportOpen[hidden]{display:none!important}
 #keywordCreateOpen{margin-left:auto}
@@ -814,6 +810,15 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
 .key-edit-paste-actions{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:9px}
 #keyEditPasteStatus{font-size:12px;color:#4c6590;overflow-wrap:anywhere;min-width:0}
 @media(max-width:760px){.key-edit-import-bar{padding:9px;gap:5px}.key-edit-import-bar span{font-size:11px}.key-edit-paste-panel{padding:10px}.key-edit-paste-panel textarea{height:90px}.key-edit-paste-actions>.btn{width:100%}}
+
+/* 키워드 입력칸과 주변 일반 문장 사이의 좌우 간격만 확보.
+   빈칸 자체의 너비·높이·내부 여백·폰트 및 문장 행 높이는 기존 설정 그대로 사용. */
+.content-mask-sentence .inline-answer,
+.extra-mask-sentence .inline-answer{margin-left:9px;margin-right:9px;}
+@media(max-width:650px){
+ .content-mask-sentence .inline-answer,
+ .extra-mask-sentence .inline-answer{margin-left:8px;margin-right:8px;}
+}
 </style></head><body>
 <nav class="mode-switch" id="modeSwitch" aria-label="학습 모드 선택"><a class="brand" id="brandHome" href="#contents" aria-label="정보과 교육과정 처음 화면으로 이동">정보과 교육과정</a>
 <button type="button" id="modeContent" class="active">내용체계표 공부</button>
@@ -989,38 +994,6 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
 </div>
 <script>
 'use strict';
-/* Touchscreen/iPad/S Pen navigation must not programmatically focus a text input.
-   iOS/Android can reopen the on-screen keyboard on every .focus() call. */
-const STUDY_TOUCH_DEVICE=(()=>{
- const touch=Number(navigator.maxTouchPoints||0)>0;
- return touch && (matchMedia('(pointer:coarse)').matches || matchMedia('(any-pointer:coarse)').matches || /iPad|iPhone|Android|MacIntel/i.test(navigator.userAgent));
-})();
-let studyPendingField=null;
-function studyCloseSoftKeyboard(){
- if(!STUDY_TOUCH_DEVICE)return;
- const active=document.activeElement;
- if(active&&active.matches?.('input,textarea,[contenteditable="true"]'))active.blur();
-}
-function studyMarkNextField(field,scroll=true){
- document.querySelectorAll('.study-next-target').forEach(el=>el.classList.remove('study-next-target'));
- if(!field||!field.isConnected){studyPendingField=null;return;}
- studyPendingField=field;
- field.classList.add('study-next-target');
- if(scroll)field.scrollIntoView({behavior:'smooth',block:'center'});
-}
-function studyAdvanceTo(field){
- if(STUDY_TOUCH_DEVICE){
-  studyCloseSoftKeyboard();
-  studyMarkNextField(field);
- }else if(field){
-  field.focus({preventScroll:true});
-  field.scrollIntoView({behavior:'smooth',block:'center'});
- }
-}
-document.addEventListener('focusin',event=>{
- const target=event.target;
- if(target?.matches?.('#contentTableBody input.inline-blank,#contentTableBody textarea.table-input,#extraTable input.inline-blank,#extraTable textarea.extra-input'))studyMarkNextField(target,false);
-},true);
 const UNITS=[{"subject":"중학교 정보","name":"컴퓨팅 시스템","num":1,"items":[{"code":"9정01-01","text":"컴퓨팅 시스템의 구성요소와 동작 원리를 이해하고, 운영 체제의 기능을 분석한다."},{"code":"9정01-02","text":"피지컬 컴퓨팅의 개념을 이해하고, 생활 속에서 적용된 사례 조사를 통해 컴퓨팅 시스템의 필요성과 가치를 판단한다."},{"code":"9정01-03","text":"문제 해결 목적에 맞는 피지컬 컴퓨팅 구성요소를 선택하여 시스템을 구상한다."}]},{"subject":"중학교 정보","name":"데이터","num":2,"items":[{"code":"9정02-01","text":"실생활의 데이터가 디지털 형태로 변환되어 활용되는 긍정적 가치를 탐색하고, 다양한 데이터를 디지털 형태로 표현한다."},{"code":"9정02-02","text":"문제 해결에 적합한 데이터를 수집하고, 목적에 맞게 구분하여 관리한다."},{"code":"9정02-03","text":"실생활의 데이터를 표, 다이어그램 등 다양한 형태로 구조화한다."},{"code":"9정02-04","text":"사례를 중심으로 데이터 간의 관계를 파악하고, 데이터에 기반하여 의미를 해석한다."},{"code":"9정02-05","text":"여러 학문 분야의 사례를 중심으로 데이터를 수집·분석하여 융합적으로 문제를 해결한다."}]},{"subject":"중학교 정보","name":"알고리즘과 프로그래밍","num":3,"items":[{"code":"9정03-01","text":"문제의 상태를 정의하고 수행 가능한 형태로 구조화한다."},{"code":"9정03-02","text":"문제 해결을 위한 추상화의 중요성을 이해하고, 핵심요소를 중심으로 알고리즘을 표현한다."},{"code":"9정03-03","text":"알고리즘의 중요성을 이해하고, 문제를 해결하는 다양한 알고리즘을 비교·분석한다."},{"code":"9정03-04","text":"사례를 중심으로 문제 해결에 적합한 전략을 선택하여 알고리즘을 설계한다."},{"code":"9정03-05","text":"데이터를 순차적으로 저장할 수 있는 구조를 활용하여 문제 해결 프로그램을 작성한다."},{"code":"9정03-06","text":"논리 연산과 중첩 제어 구조를 활용하여 문제를 해결하는 프로그램을 작성한다."},{"code":"9정03-07","text":"프로그램 작성에서 함수를 활용하고, 프로그램 수행 결과를 디버거로 분석하여 오류를 수정한다."},{"code":"9정03-08","text":"실생활의 문제를 탐색하여 발견하고, 프로그래밍을 통해 해결한다."},{"code":"9정03-09","text":"다양한 학문 분야의 문제 해결을 위해 협력하여 소프트웨어를 개발한다."}]},{"subject":"중학교 정보","name":"인공지능","num":4,"items":[{"code":"9정04-01","text":"인공지능의 개념과 특성을 설명하고 인공지능 소프트웨어를 구별한다."},{"code":"9정04-02","text":"인공지능 학습에서 데이터의 중요성을 이해하고, 학습에 필요한 데이터를 수집하여 분류한다."},{"code":"9정04-03","text":"다양한 데이터를 활용하여 인공지능 시스템을 구성하고 적용한다."},{"code":"9정04-04","text":"인공지능 시스템으로 해결 가능한 문제를 발견하고, 문제 해결에 적합한 인공지능 시스템을 적용한다."},{"code":"9정04-05","text":"인공지능 학습에 필요한 데이터의 수집과 활용에서 발생하는 윤리적인 문제의 해결 방안을 구상한다."}]},{"subject":"중학교 정보","name":"디지털 문화","num":5,"items":[{"code":"9정05-01","text":"디지털 사회의 특성을 탐구하고, 사회 변화에 따른 직업의 변화를 탐구한다."},{"code":"9정05-02","text":"디지털 사회의 구성원으로서 편리하고 안전한 생활을 위한 규칙에 대해 민주적으로 논의하고 실천 방안을 수립한다."},{"code":"9정05-03","text":"사례를 중심으로 디지털 공간에서 함께 살아가기 위해 개인 정보 및 권리와 저작권을 보호하는 실천 방법을 탐구한다."}]},{"subject":"고등학교 정보","name":"컴퓨팅 시스템","num":1,"items":[{"code":"12정01-01","text":"유무선 네트워크의 특성을 이해하고, 컴퓨팅 시스템 간 공유, 협력, 소통을 위한 네트워크 환경을 구성한다."},{"code":"12정01-02","text":"사물인터넷의 구성과 동작 원리를 분석하고, 사물인터넷 기술로 인한 개인의 삶과 사회의 변화를 예측한다."},{"code":"12정01-03","text":"문제 해결에 적합한 피지컬 컴퓨팅 시스템 장치를 선택하여 사물인터넷 시스템을 설계한다."}]},{"subject":"고등학교 정보","name":"데이터","num":2,"items":[{"code":"12정02-01","text":"디지털 데이터 압축의 개념과 필요성을 이해하고, 압축의 효율성을 분석하여 평가한다."},{"code":"12정02-02","text":"암호화의 개념을 이해하고, 암호화를 활용하여 데이터를 안전하게 관리하는 사례를 비교·분석한다."},{"code":"12정02-03","text":"빅데이터의 개념과 특징에 대한 이해를 바탕으로, 문제 해결에 적합한 데이터를 수집한다."},{"code":"12정02-04","text":"빅데이터 분석 도구를 활용하여 데이터를 시각화하고 그 의미와 가치를 해석한다."}]},{"subject":"고등학교 정보","name":"알고리즘과 프로그래밍","num":3,"items":[{"code":"12정03-01","text":"복잡한 문제를 해결 가능한 작은 문제로 분해하고 모델링한다."},{"code":"12정03-02","text":"데이터를 정렬하는 다양한 알고리즘의 특징과 효율을 비교·분석한다."},{"code":"12정03-03","text":"데이터를 탐색하는 다양한 알고리즘의 특징과 효율을 비교·분석한다."},{"code":"12정03-04","text":"자료형의 종류와 특성을 알고, 적합한 자료형을 선택하여 프로그램을 작성한다."},{"code":"12정03-05","text":"표준입출력과 파일입출력을 활용한 프로그램을 작성한다."},{"code":"12정03-06","text":"다차원 데이터 구조를 활용한 프로그램을 작성한다."},{"code":"12정03-07","text":"다양한 제어 구조를 복합적으로 활용한 프로그램을 작성한다."},{"code":"12정03-08","text":"객체를 구현하는 클래스와 인스턴스를 활용하여 프로그램을 작성한다."},{"code":"12정03-09","text":"실생활 및 다양한 학문 분야의 문제 해결을 위한 프로그램을 협력적으로 설계·구현한다."},{"code":"12정03-10","text":"문제 해결을 위한 프로그램의 성능을 평가하고 공유한다."}]},{"subject":"고등학교 정보","name":"인공지능","num":4,"items":[{"code":"12정04-01","text":"지능 에이전트의 개념과 특성을 이해하고, 인간과 인공지능의 관계를 분석한다."},{"code":"12정04-02","text":"기계학습의 개념을 이해하고, 지도학습과 비지도학습의 차이를 비교·분석한다."},{"code":"12정04-03","text":"기계학습을 활용하여 해결할 수 있는 문제와 그렇지 않은 문제를 구분하고, 사회문제 해결에 기계학습을 적용한다."}]},{"subject":"고등학교 정보","name":"디지털 문화","num":5,"items":[{"code":"12정05-01","text":"디지털 기술이 사회에 미치는 영향력을 분석하고 발전 방향을 예측하여 진로를 설계한다."},{"code":"12정05-02","text":"보호해야 할 정보와 공유해야 할 정보를 구분하고, 올바른 정보 보호 방법을 실천한다."},{"code":"12정05-03","text":"정보보안의 필요성을 이해하고, 보안 기술을 활용하여 디지털 윤리를 실천한다."}]},{"subject":"고등학교 인공지능 기초","name":"인공지능의 이해","num":1,"items":[{"code":"12인기01-01","text":"인공지능의 지능적 판단에 대한 이해를 바탕으로 인공지능을 활용한 실생활 및 다양한 학문 분야의 문제 해결 사례를 비교·분석한다."},{"code":"12인기01-02","text":"인공지능에서 탐색의 중요성을 이해하고 문제 해결을 위한 탐색 과정을 설계한다."},{"code":"12인기01-03","text":"맹목적 탐색과 정보 이용 탐색의 차이를 중심으로 지능적 탐색의 원리를 파악한다."},{"code":"12인기01-04","text":"지능적 탐색이 필요한 문제를 찾아보고 문제 해결을 위해 정보 이용 탐색 알고리즘을 적용한다."},{"code":"12인기01-05","text":"규칙과 사실을 활용하여 지식을 표현하고, 새로운 지식을 추론하여 생성한다."}]},{"subject":"고등학교 인공지능 기초","name":"인공지능과 학습","num":2,"items":[{"code":"12인기02-01","text":"기계학습을 적용할 문제를 정의하고, 문제 해결에 필요한 데이터를 선정하여 수집한다."},{"code":"12인기02-02","text":"수집한 데이터를 가공하여 핵심 속성을 추출한다."},{"code":"12인기02-03","text":"문제 해결에 적합한 기계학습의 유형과 알고리즘을 선정한다."},{"code":"12인기02-04","text":"훈련 데이터를 이용하여 학습을 진행하고, 테스트 데이터를 사용하여 성능을 평가한다."},{"code":"12인기02-05","text":"인공신경망과 딥러닝의 특성에 대한 이해를 바탕으로 활용 분야를 탐색한다."},{"code":"12인기02-06","text":"딥러닝을 활용하여 실생활 및 다양한 학문 분야의 문제를 해결하고, 성능을 평가한다."}]},{"subject":"고등학교 인공지능 기초","name":"인공지능의 사회적 영향","num":3,"items":[{"code":"12인기03-01","text":"인공지능의 발전으로 인한 사회 변화를 살펴보고, 인공지능으로 해결할 수 있는 사회적 문제를 분석한다."},{"code":"12인기03-02","text":"인공지능에 의해 변화하는 인간의 삶과 직업의 양상에 대해 이해하고 진로를 탐색한다."},{"code":"12인기03-03","text":"인공지능에 대한 비판적 자세를 바탕으로 인공지능과 인간의 공존 방안을 도출한다."},{"code":"12인기03-04","text":"인공지능의 활용사례와 윤리적 딜레마 상황을 인공지능 윤리 관점에서 분석한다."}]},{"subject":"고등학교 인공지능 기초","name":"인공지능 프로젝트","num":4,"items":[{"code":"12인기04-01","text":"지속가능발전목표를 해결하기 위해 인공지능을 적용할 수 있는 방안을 탐색하고, 인공지능 프로젝트 활동에 적합한 주제를 도출한다."},{"code":"12인기04-02","text":"인공지능 문제 해결 과정에 기반하여 프로젝트 수행 계획을 구안한다."},{"code":"12인기04-03","text":"인공지능 프로젝트를 수행하는 과정에서 협력적인 문제 해결 자세를 바탕으로 인공지능 소프트웨어를 개발한다."},{"code":"12인기04-04","text":"인공지능의 사회적 영향을 고려하여 인공지능 소프트웨어를 개발하고, 평가 결과를 반영하여 성능을 개선한다."}]},{"subject":"고등학교 데이터과학","name":"데이터 과학의 이해","num":1,"items":[{"code":"12데과01-01","text":"데이터 과학의 개념을 이해하고, 문제 해결 사례를 데이터 기반 의사 결정 상황에 적용한다."},{"code":"12데과01-02","text":"정형 데이터와 비정형 데이터를 구분하고, 데이터 속성에서 데이터의 잠재적 가치를 파악한다."},{"code":"12데과01-03","text":"데이터셋의 집합인 데이터베이스를 이해하고, 서로 다른 데이터셋의 데이터를 분석이 가능한 형태로 통합하는 것의 의미를 파악한다."},{"code":"12데과01-04","text":"데이터로 인한 사회 변화를 인식하고, 진로 및 직업과 관련한 데이터 기반 문제 해결 사례를 분석한다."}]},{"subject":"고등학교 데이터과학","name":"데이터 준비와 분석","num":2,"items":[{"code":"12데과02-01","text":"데이터를 편향되지 않도록 수집하고, 수집된 데이터의 특성을 분석한다."},{"code":"12데과02-02","text":"이상치와 결측치 탐색 및 정규화를 통해 전처리하여 오류 가능성을 최소화하고, 데이터 분석을 위해 시각화한다."},{"code":"12데과02-03","text":"데이터를 분석하기 위해 데이터 속성 간의 관계를 파악하고 통합한다."},{"code":"12데과02-04","text":"동일한 데이터를 서로 다른 분석 방법을 적용하여 분석 결과를 비교한다."}]},{"subject":"고등학교 데이터과학","name":"데이터 모델링과 평가","num":3,"items":[{"code":"12데과03-01","text":"데이터 모델 개념을 이해하고 데이터 분석에 활용할 수 있는 도구를 탐색한다."},{"code":"12데과03-02","text":"동일한 데이터를 통계적 회귀모델과 기계학습을 통한 회귀모델로 분석하여 결과 해석 내용을 비교한다."},{"code":"12데과03-03","text":"데이터의 속성에 대한 유사성을 측정하고 분석하여 군집을 형성하고, 군집 분석 결과의 의미를 해석한다."},{"code":"12데과03-04","text":"데이터 간의 관계를 분석하고 상호 연관성을 파악하여 결과의 의미를 해석한다."},{"code":"12데과03-05","text":"데이터 분석 방법에 따른 데이터 모델의 분석 결과를 비교하고 평가한다."},{"code":"12데과03-06","text":"다양한 분석 방법을 비교하고 평가하여 분석 목적에 가장 적합한 분석 방법을 적용한다."}]},{"subject":"고등학교 데이터과학","name":"데이터 과학 프로젝트","num":4,"items":[{"code":"12데과04-01","text":"분야별 데이터 과학의 적용 사례를 조사하여 분석하고, 데이터로 해결 가능한 주제를 찾아 적합성을 판단한다."},{"code":"12데과04-02","text":"수집된 데이터를 탐색적으로 분석하여 데이터 속 의미를 파악하고, 문제 해결을 위한 창의적인 방법을 구상한다."},{"code":"12데과04-03","text":"데이터 분석을 진행할 때, 2개 이상의 방법을 사용하여 분석하고 결과를 비교한다."},{"code":"12데과04-04","text":"복잡하고 어려운 문제라도 끝까지 해결하기 위한 자세를 갖추고 분석하여, 분석 결과에 대한 의미를 해석한다."},{"code":"12데과04-05","text":"분석을 위한 목적부터 데이터 수집 및 분석에 이르는 전 과정을 성찰하고, 사회적 영향을 고려하여 분석 결과의 활용방안을 탐색한다."}]},{"subject":"고등학교 소프트웨어와 생활","name":"세상을 변화시키는 소프트웨어","num":1,"items":[{"code":"12소생01-01","text":"소프트웨어가 세상을 변화시킨 사례를 탐색하고 소프트웨어가 사회 변화에 미치는 영향을 분석한다."},{"code":"12소생01-02","text":"실세계의 문제와 현상을 소프트웨어의 관점으로 바라보고 소프트웨어 발전에 따른 미래 사회의 변화를 예측한다."},{"code":"12소생01-03","text":"소프트웨어 융합을 통한 문제 해결 사례를 바탕으로, 다양한 학문 분야에서 소프트웨어와의 융합을 통해 문제를 해결하는 방법을 비교·분석한다."}]},{"subject":"고등학교 소프트웨어와 생활","name":"창작을 지원하는 소프트웨어","num":2,"items":[{"code":"12소생02-01","text":"피지컬 컴퓨팅 도구로 구현된 작품의 구성 및 작동 원리를 분석한다."},{"code":"12소생02-02","text":"소프트웨어를 통해 아이디어를 표현하는 데 필요한 센서와 액추에이터를 선택하여 피지컬 컴퓨팅 시스템을 구성한다."},{"code":"12소생02-03","text":"피지컬 컴퓨팅을 통해 미디어 아트 작품을 창작하고, 창작에 활용된 소프트웨어의 가치를 파악한다."},{"code":"12소생02-04","text":"웨어러블 장치 작품을 창작하고 공유하는 과정을 통해 소프트웨어의 가치를 확산한다."}]},{"subject":"고등학교 소프트웨어와 생활","name":"현상을 분석하는 소프트웨어","num":3,"items":[{"code":"12소생03-01","text":"사회 현상을 분석할 수 있는 데이터의 중요성과 가치를 인식하고, 데이터를 탐색하여 활용 방안을 구상한다."},{"code":"12소생03-02","text":"데이터 유형에 따라 적합한 방법으로 데이터를 수집하고, 목적에 맞게 처리하고 관리한다."},{"code":"12소생03-03","text":"데이터를 분석하고 시각화하여 다양한 사회 현상의 의미를 해석한다."},{"code":"12소생03-04","text":"데이터의 사회적 가치에 대한 이해를 토대로 데이터를 분석하고 의미를 파악한 후, 결과를 윤리적으로 활용한다."}]},{"subject":"고등학교 소프트웨어와 생활","name":"모의 실험하는 소프트웨어","num":4,"items":[{"code":"12소생04-01","text":"시뮬레이션 프로그램의 개념과 구성요소를 이해하고 가치를 파악한다."},{"code":"12소생04-02","text":"다양한 시뮬레이션 프로그램의 활용 분야를 탐색하고 활용 방안을 구상한다."},{"code":"12소생04-03","text":"시뮬레이션 프로그램 구성 방법에 따라 복잡한 문제나 현상의 원리를 시뮬레이션 모델로 표현한다."},{"code":"12소생04-04","text":"소프트웨어를 적극적으로 활용하여 시뮬레이션 모델을 구현한다."}]},{"subject":"고등학교 소프트웨어와 생활","name":"가치를 창출하는 소프트웨어","num":5,"items":[{"code":"12소생05-01","text":"소프트웨어 스타트업의 개념을 이해하고 새로운 가치를 창출하는 소프트웨어 스타트업 사례를 분석한다."},{"code":"12소생05-02","text":"소프트웨어 스타트업 프로젝트의 수행 과정을 이해하고, 사용자 요구를 분석하여 소프트웨어 스타트업 아이디어를 구안한다."},{"code":"12소생05-03","text":"스타트업 프로젝트에 적합한 소프트웨어를 협력적으로 설계하고 구현한다."},{"code":"12소생05-04","text":"개발한 소프트웨어의 가치를 사회적, 기능적, 윤리적 관점에서 평가한다."}]}];
 const COURSES=['중학교 정보','고등학교 정보','고등학교 인공지능 기초','고등학교 데이터과학','고등학교 소프트웨어와 생활'];
 const SUBJECT_SHORT=['중학교 정보','고등학교 정보','인공지능 기초','데이터과학','소프트웨어와 생활'];
@@ -1032,9 +1005,14 @@ function loadScores(){state.scores={};}
 function saveScores(){}
 function key(u){return u.subject+' / '+u.num;}
 function unitsOfCourse(courseIdx){return UNITS.map((u,i)=>({u,i})).filter(x=>x.u.subject===COURSES[courseIdx]);}
-function current(){return UNITS[state.unit];}
+let sequenceUnitRetry=null;
+function current(){
+ const unit=UNITS[state.unit];
+ return sequenceUnitRetry&&sequenceUnitRetry.unit===state.unit
+  ?{...unit,items:sequenceUnitRetry.indices.map(i=>unit.items[i])}:unit;
+}
 function shuffledIndexes(length){const indices=Array.from({length},(_,i)=>i);for(let i=indices.length-1;i>0;i--){const k=Math.floor(Math.random()*(i+1));[indices[i],indices[k]]=[indices[k],indices[i]];}if(length>1&&indices.every((val,i)=>val===i))indices.reverse();return indices;}
-function newUnit(index){state.unit=index;state.course=COURSES.indexOf(current().subject);state.shuffled=shuffledIndexes(current().items.length);state.picked=[];state.pickSnapshot=[];state.graded=false;state.showSnapshot=false;render();window.scrollTo({top:0,behavior:'smooth'});}
+function newUnit(index){if(sequenceUnitRetry&&index!==state.unit)sequenceUnitRetry=null;state.unit=index;state.course=COURSES.indexOf(current().subject);state.shuffled=shuffledIndexes(current().items.length);state.picked=[];state.pickSnapshot=[];state.graded=false;state.showSnapshot=false;render();window.scrollTo({top:0,behavior:'smooth'});}
 function selectCourse(index){const units=unitsOfCourse(index);if(!units.length)return;newUnit(units[0].i);}
 function choose(index){if(state.graded||state.picked.includes(index))return;state.picked.push(index);renderQuiz();}
 function removePick(position){if(state.graded)return;state.picked.splice(position,1);renderQuiz();}
@@ -1098,9 +1076,9 @@ async function toggleFocus(){
  window.scrollTo({top:0,behavior:'instant'});
 }
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&document.body.classList.contains('focus-mode')){document.body.classList.remove('focus-mode');requestedFocus=false;refreshFocusButton();}});
-function grade(){const u=current();if(state.graded||state.picked.length!==u.items.length)return;state.graded=true;state.pickSnapshot=[...state.picked];state.scores[key(u)]={score:score(),total:u.items.length,completed:true};saveScores();render();$('resultPanel').scrollIntoView({behavior:'smooth',block:'start'});}
+function grade(){const u=current();if(state.graded||state.picked.length!==u.items.length)return;state.graded=true;state.pickSnapshot=[...state.picked];if(!sequenceUnitRetry){state.scores[key(u)]={score:score(),total:u.items.length,completed:true};saveScores();}render();$('resultPanel').scrollIntoView({behavior:'smooth',block:'start'});}
 function next(){const following=state.unit+1;if(following<UNITS.length&&UNITS[following].subject===current().subject)newUnit(following);else selectCourse((state.course+1)%COURSES.length);}
-function retry(){newUnit(state.unit);}
+function retry(){showUnitRetryDialog('sequence');}
 function h(tag,classes,text){const el=document.createElement(tag);if(classes)el.className=classes;if(text!==undefined)el.textContent=text;return el;}
 function elt(tag,props){const e=document.createElement(tag);if(props)for(const [k,v] of Object.entries(props)){if(k==='class')e.className=v;else if(k==='text')e.textContent=v;else e.setAttribute(k,v);}return e;}
 function renderNav(){
@@ -1143,7 +1121,7 @@ function renderQuiz(){
  $('answerHint').textContent=state.picked.length===0?'아직 선택한 문장이 없습니다. 아래 성취기준을 눌러 시작하세요.':state.picked.length===n?'모든 문장을 배치했습니다. 손잡이를 끌어 순서를 고친 뒤 채점하세요.':'다음으로 '+(state.picked.length+1)+'번째 성취기준을 선택하세요. (선택한 문장은 드래그 이동 가능)';
  $('choices').replaceChildren();
  const remaining=state.shuffled.filter(idx=>!state.picked.includes(idx));
- $('remainingCaption').textContent='남은 문장 '+remaining.length+'개 · 정답 순서대로 눌러 배치하세요.';
+ $('remainingCaption').textContent=(sequenceUnitRetry?'오답 복습 · ':'')+'남은 문장 '+remaining.length+'개 · 정답 순서대로 눌러 배치하세요.';
  if(remaining.length===0){$('choices').append(h('div','none','✓ 문장을 모두 선택했습니다. 위에서 채점해 주세요.'));}
  else remaining.forEach(idx=>{
   const letter=String.fromCharCode(65+state.shuffled.indexOf(idx));
@@ -1313,8 +1291,7 @@ function contentGradeItem(qid,moveNext){
   const item=field.closest('.table-answer-item');item.classList.toggle('is-right',correct);item.classList.toggle('is-wrong',!correct);contentUpdateProgress();setTimeout(()=>subjectCourseCheck('contents',contentState.course),85);
   if(moveNext){const inputs=[...contentEl('contentTableBody').querySelectorAll('textarea')],pos=inputs.indexOf(field);
     const next=inputs.slice(pos+1).find(el=>!contentState.answers[contentId(contentState.course,contentState.unit,Number(el.dataset.question))]);
-    if(next)requestAnimationFrame(()=>studyAdvanceTo(next));
-    else if(STUDY_TOUCH_DEVICE)studyCloseSoftKeyboard();
+    if(next)requestAnimationFrame(()=>{next.focus({preventScroll:true});next.scrollIntoView({behavior:'smooth',block:'center'});});
     else if(previouslyGraded)field.blur(); // 마지막 칸은 유지합니다.
     else field.focus();
   }
@@ -1371,17 +1348,7 @@ contentEl('contentFocusBtn').addEventListener('click',async()=>{
 
 
 contentEl('contentNextUnitBtn').addEventListener('click',()=>contentNextUnit(1));
-contentEl('contentResetBtn').addEventListener('click',()=>{subjectCourseShown.delete('contents:'+contentState.course);
- const prefix=contentState.course+'/'+contentState.unit+'/';
- for(let i=0;i<contentItems().length;i++){
-  delete contentState.answers[contentId(contentState.course,contentState.unit,i)];
-  delete contentState.drafts[contentId(contentState.course,contentState.unit,i)];
- }
- for(const key of Object.keys(contentMaskResponses))if(key.startsWith(prefix))delete contentMaskResponses[key];
- contentRevealAll=false;contentEl('contentRevealBtn').textContent='전체 정답 확인';
- saveContent();contentRenderTable();
- const first=contentEl('contentTableBody').querySelector('textarea, input.inline-blank');if(first)studyAdvanceTo(first);
-});
+contentEl('contentResetBtn').addEventListener('click',()=>showUnitRetryDialog('contents'));
 document.addEventListener('fullscreenchange',()=>{
  if(document.fullscreenElement!==contentEl('contentPage'))document.body.classList.remove('content-focus-mode');
  contentRenderFullButton();
@@ -1399,7 +1366,7 @@ function contentMoveField(delta){
  const fields=[...contentEl('contentTableBody').querySelectorAll('textarea.table-input')];if(!fields.length)return;
  const active=fields.indexOf(document.activeElement);
  const target=active<0?(delta>0?0:fields.length-1):Math.max(0,Math.min(fields.length-1,active+delta));
- const field=fields[target];studyAdvanceTo(field);
+ const field=fields[target];field.focus({preventScroll:true});field.scrollIntoView({behavior:'smooth',block:'center'});
 }
 const CONTENT_EDIT_STATE={course:0,unit:0,scopeCourse:0,scopeUnit:0};
 function contentEditUnit(){return contentUnitsOf(CONTENT_EDIT_STATE.course)[CONTENT_EDIT_STATE.unit];}
@@ -1710,18 +1677,18 @@ function editorRow(row){const wrapper=document.createElement('div');wrapper.clas
  d.addEventListener('mouseup',()=>{const range=editableSelection(d);if(!range)return;window.getSelection()?.removeAllRanges();saveExtraRange(row.id,row.raw,[...getExtraRange(row.id,row.raw),range]);});
  d.addEventListener('contextmenu',event=>{const m=event.target.closest('mark[data-mi]');if(!m)return;event.preventDefault();saveExtraRange(row.id,row.raw,getExtraRange(row.id,row.raw).filter((_,i)=>i!==Number(m.dataset.mi)));});
  return wrapper;}
-function maskRanges(row){const r=getExtraRange(row.id,row.raw);return r.length?r:(extra.mode==='standardsStudy'&&row.raw?[[0,row.raw.length]]:[])}
+function maskRanges(row){const r=getExtraRange(row.id,row.raw);const active=subjectReviewSession?.kind===extra.mode&&subjectReviewSession.course===extra.course&&subjectReviewSession.units?.includes(extra.unit);return r.length?r:((extra.mode==='standardsStudy'||(active&&subjectReviewSession.targets[row.id]))&&row.raw?[[0,row.raw.length]]:[])}
 function rowKey(row,i){return row.id+'/'+i}
 function maskInputRow(row){
  const p=document.createElement('div');p.className='extra-mask-sentence';const ranges=maskRanges(row);let pos=0;
- const review=subjectReviewSession?.kind==='standardsStudy'&&subjectReviewSession.course===extra.course&&extra.mode==='standardsStudy'?subjectReviewSession:null;
+ const review=subjectReviewSession?.kind===extra.mode&&subjectReviewSession.course===extra.course&&subjectReviewSession.units?.includes(extra.unit)?subjectReviewSession:null;
  ranges.sort((a,b)=>a[0]-b[0]).forEach(([start,end],ki)=>{
   if(start<pos||end>row.raw.length)return;
   p.append(document.createTextNode(row.raw.slice(pos,start)));
   const word=row.raw.slice(start,end),key=rowKey(row,ki);
    if(review&&!review.targets[row.id]?.includes(ki)){p.append(document.createTextNode(word));pos=end;return;}
    const existing=review?review.responses[key]:(extra.answers[key]||(extraRevealAll?{ok:true,value:word,reveal:true}:null));
-  const holder=document.createElement('span');holder.className='inline-answer'+(existing?(existing.ok?' correct':' incorrect'):'');holder.dataset.blankkey=key;
+  const holder=document.createElement('span');holder.className='inline-answer'+(existing?(existing.ok?' correct':' incorrect'):'');
   if(existing){const reveal=document.createElement('span');reveal.className='inline-revealed';reveal.textContent=word;reveal.title=existing.ok?'정답':'입력: '+existing.value;holder.append(reveal);if(!existing.reveal){const reset=document.createElement('button');reset.type='button';reset.className='inline-reset';reset.textContent='↻';reset.setAttribute('aria-label','다시 입력');reset.onclick=()=>{if(review)delete review.responses[key];else delete extra.answers[key];renderExtraTable()};holder.append(reset);}}
   else{const inp=document.createElement('input');inp.type='text';inp.className='inline-blank';inp.style.width=`${Math.max(88,Math.min(240,word.length*17+35))}px`;inp.setAttribute('aria-label','키워드 '+(ki+1));inp.autocomplete='off';inp.spellcheck=false;inp.value=extra.drafts[key]||'';
     inp.addEventListener('input',()=>extra.drafts[key]=inp.value);
@@ -1733,14 +1700,14 @@ function maskInputRow(row){
 }
 function gradeExtraKeyword(row,ki,typed,word){
  const key=rowKey(row,ki),ok=eNorm(typed)===eNorm(word);
- const review=subjectReviewSession?.kind==='standardsStudy'&&subjectReviewSession.course===extra.course&&extra.mode==='standardsStudy'?subjectReviewSession:null;
+ const review=subjectReviewSession?.kind===extra.mode&&subjectReviewSession.course===extra.course&&subjectReviewSession.units?.includes(extra.unit)?subjectReviewSession:null;
  if(review)review.responses[key]={ok,value:typed};else extra.answers[key]={ok,value:typed};
  renderExtraTable();if(!review&&extra.mode==='standardsStudy')setTimeout(()=>subjectCourseCheck('standardsStudy',extra.course),85);
  const holders=[...eGet('extraTable').querySelectorAll('.inline-answer[data-blankkey]')];
  const index=holders.findIndex(el=>el.dataset.blankkey===key);
  // Previously answered blanks have no input; skip over them instead of stopping.
  const next=holders.slice(index+1).map(el=>el.querySelector('input.inline-blank')).find(Boolean);
- if(next)studyAdvanceTo(next);else studyCloseSoftKeyboard();
+ if(next){next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'});}
 }
 function fullRow(row){
  const box=document.createElement('div');box.className='extra-full-row';
@@ -1753,7 +1720,7 @@ function fullRow(row){
  }
  const field=document.createElement('textarea');field.rows=2;field.className='extra-input';field.placeholder='정답을 입력하고 Enter';field.value=extra.drafts[row.id]||'';field.spellcheck=false;field.dataset.rowId=row.id;
  field.addEventListener('input',()=>{extra.drafts[row.id]=field.value;delete extra.answers[row.id];const host=box.querySelector('.extra-full-feedback');host.innerHTML='';});
- field.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();let correct=getExtraRange(row.id,row.raw).map(([s,t])=>row.raw.slice(s,t));if(!correct.length)correct=[row.raw];const ok=!!eNorm(field.value)&&correct.every(w=>eNorm(field.value).includes(eNorm(w)));extra.answers[row.id]={ok,value:field.value};showFeedback();if(extra.mode==='standardsStudy')setTimeout(()=>subjectCourseCheck('standardsStudy',extra.course),85);const fields=[...eGet('extraTable').querySelectorAll('textarea.extra-input')],pos=fields.indexOf(field);const next=fields.slice(pos+1).find(f=>!extra.answers[f.dataset.rowId]);if(next)requestAnimationFrame(()=>studyAdvanceTo(next));else studyCloseSoftKeyboard();}});
+ field.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();let correct=getExtraRange(row.id,row.raw).map(([s,t])=>row.raw.slice(s,t));if(!correct.length)correct=[row.raw];const ok=!!eNorm(field.value)&&correct.every(w=>eNorm(field.value).includes(eNorm(w)));extra.answers[row.id]={ok,value:field.value};showFeedback();if(extra.mode==='standardsStudy')setTimeout(()=>subjectCourseCheck('standardsStudy',extra.course),85);const fields=[...eGet('extraTable').querySelectorAll('textarea.extra-input')],pos=fields.indexOf(field);const next=fields.slice(pos+1).find(f=>!extra.answers[f.dataset.rowId]);if(next)requestAnimationFrame(()=>{next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'});});}});
  const host=document.createElement('div');host.className='extra-full-feedback';box.append(field,host);
  function showFeedback(){const a=extra.answers[row.id];if(!a)return;const all=getExtraRange(row.id,row.raw);host.innerHTML=`<div class="extra-status ${a.ok?'good':'bad'}">${a.ok?'✓ 정답':'✕ 오답'}</div><div class="extra-correct-text">${rangesMarkup(row.raw,all,(s)=>`<strong class="${eNorm(a.value).includes(eNorm(s))?'good':'bad'}">${eEsc(s)}</strong>`)}</div>`;}
  showFeedback();if(extraRevealAll&&!extra.answers[row.id]){host.textContent="정답 · "+row.raw;host.classList.add("all-reveal-text");}return box;
@@ -1794,7 +1761,7 @@ function renderExtraSource(){
 }
 function extraOpenEditor(){extra.edit=!extra.edit;renderExtra()}
 function extraToggleSource(){extra.showSource=!extra.showSource;renderExtraSource()}
-function extraReset(){if(extra.mode==='standardsStudy')subjectCourseShown.delete('standardsStudy:'+extra.course);extra.answers={};extra.drafts={};renderExtraTable()}
+function extraReset(){showUnitRetryDialog('extra');}
 function extraBackToOutline(){extra.edit=false;renderExtra()}
 function initExtraUI(){
  eGet('extraTocBtn').onclick=toggleExtraToc;eGet('extraCloseToc').onclick=closeExtraToc;eGet('extraBackdrop').onclick=closeExtraToc;
@@ -1841,7 +1808,7 @@ function makeContentMaskTable(){
      const holder=document.createElement('span');holder.className='inline-answer'+(existing?(existing.ok?' correct':' incorrect'):'');holder.dataset.maskKey=key;
     if(existing||(!review&&contentRevealAll)){const fixed=document.createElement('span');fixed.className='inline-revealed';fixed.textContent=kw;fixed.title=(!existing||existing.ok)?'정답':'오답: '+existing.answer;holder.classList.add(!existing||existing.ok?'correct':'incorrect');holder.append(fixed);if(existing){const reset=document.createElement('button');reset.type='button';reset.className='inline-reset';reset.textContent='↻';reset.onclick=()=>{if(review)delete review.responses[key];else delete contentMaskResponses[key];makeContentMaskTable()};holder.append(reset);}}
     else{const inp=document.createElement('input');inp.type='text';inp.autocomplete='off';inp.spellcheck=false;inp.className='inline-blank';inp.placeholder='____';inp.setAttribute('aria-label',`${CONTENT_LABELS[t]} 키워드 ${k+1}`);inp.style.width=Math.max(90,Math.min(240,kw.length*17+35))+'px';
-      inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();if(review)review.responses[key]={ok:eNorm(inp.value)===eNorm(kw),answer:inp.value};else contentMaskResponses[key]={ok:eNorm(inp.value)===eNorm(kw),answer:inp.value};makeContentMaskTable();if(!review)setTimeout(()=>subjectCourseCheck('contents',contentState.course),85);const holders=[...root.querySelectorAll('.inline-answer')];const currentIndex=holders.findIndex(x=>x.dataset.maskKey===key);const next=holders.slice(currentIndex+1).map(x=>x.querySelector('input.inline-blank')).find(Boolean);if(next)studyAdvanceTo(next);else studyCloseSoftKeyboard();}});
+      inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();if(review)review.responses[key]={ok:eNorm(inp.value)===eNorm(kw),answer:inp.value};else contentMaskResponses[key]={ok:eNorm(inp.value)===eNorm(kw),answer:inp.value};makeContentMaskTable();if(!review)setTimeout(()=>subjectCourseCheck('contents',contentState.course),85);const holders=[...root.querySelectorAll('.inline-answer')];const currentIndex=holders.findIndex(x=>x.dataset.maskKey===key);const next=holders.slice(currentIndex+1).map(x=>x.querySelector('input.inline-blank')).find(Boolean);if(next){next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'})};}});
       holder.append(inp);
     }sentence.append(holder);pos=end;
    });sentence.append(document.createTextNode(word.slice(pos)));answerLine.append(sentence);group.append(answerLine);
@@ -1994,27 +1961,6 @@ function currentKeywordEntries(){
  }
  return result;
 }
-// A rename changes only the storage key, not the saved keywords or active study state.
-function renameKeywordProfile(oldName){
- if(!Object.hasOwn(profileMap,oldName))return;
- const input=prompt('키워드 목록의 새 이름을 입력하세요.\n목록 안의 과목·키워드는 그대로 유지됩니다.',oldName);
- if(input===null)return;
- const newName=input.trim();
- if(!newName){alert('키워드 이름을 입력해 주세요.');return;}
- if(newName.length>150){alert('이름은 150자 이하로 입력하세요.');return;}
- if(newName===oldName)return;
- if(Object.hasOwn(profileMap,newName)){alert('이미 같은 이름의 키워드 목록이 있어요. 다른 이름을 선택해 주세요.');return;}
- const original=profileMap;
- const updated=Object.create(null);
- for(const [name,value] of Object.entries(original))updated[name===oldName?newName:name]=value;
- profileMap=updated;
- if(!saveProfileStore()){
-  profileMap=original;
-  alert('저장 공간 문제로 이름을 바꾸지 못했습니다. 기존 이름과 데이터는 유지됩니다.');
-  return;
- }
- renderKeywordList();
-}
 function renderKeywordList(){
  const root=eGet('keywordListItems');root.replaceChildren();
  if(keywordListType==='saved'){
@@ -2027,7 +1973,7 @@ function renderKeywordList(){
     ?Object.keys(value.content||{}).filter(key=>scopeAllowsContent(keywordListScope,key)).length
     :Object.keys(value.other||{}).filter(key=>key.startsWith(extra.mode+':')&&scopeAllowsExtra(keywordListScope,key)).length;
    const description=`현재 선택한 범위: ${cnt}개 문항`;
-   const actions=[['수정',()=>openSavedKeyEditor(name)],['이름 변경',()=>renameKeywordProfile(name)],['코드 복사',()=>openKeywordTransfer('export',name)],['키워드 적용',()=>applySavedKeyword(name)]];
+   const actions=[['수정',()=>openSavedKeyEditor(name)],['코드 복사',()=>openKeywordTransfer('export',name)],['키워드 적용',()=>applySavedKeyword(name)]];
    actions.push(['키워드 삭제',()=>{if(!confirm('저장키 “'+name+'”를 삭제할까요?'))return;const prior=profileMap[name];delete profileMap[name];if(!saveProfileStore())profileMap[name]=prior;renderKeywordList();}]);
    const entry=makeKeywordEntry(name,description,actions);
    const title=entry.querySelector('.keyword-entry-title');title.dataset.keyEdit=name;title.tabIndex=0;title.setAttribute('role','button');title.setAttribute('aria-label',`${name} 저장키 수정`);
@@ -2434,13 +2380,13 @@ function subjectFocusUnitStart(kind){
  const isContent=kind==='contents',page=eGet(isContent?'contentPage':'extraPage');
  if(page.classList.contains('hidden'))return;
  const target=page.querySelector(isContent?'#contentTableBody input.inline-blank, #contentTableBody textarea.table-input':'#extraTable input.inline-blank, #extraTable textarea.extra-input');
- if(target)studyAdvanceTo(target);
+ if(target){target.focus({preventScroll:true});target.scrollIntoView({behavior:'instant',block:'center'});}
 }
 function subjectEndReview(){
  const kind=subjectReviewSession?.kind;
  subjectReviewSession=null;
  if(kind==='contents')contentRender();
- else if(kind==='standardsStudy')renderExtra();
+ else if(kind)renderExtra();
  subjectUpdateReviewBanner();
 }
 function subjectUpdateReviewBanner(){
@@ -2455,11 +2401,11 @@ function subjectUpdateReviewBanner(){
    const close=subjectButton('일반 학습으로 돌아가기',subjectEndReview);banner.append(close);
    slot.parentNode.insertBefore(banner,slot);
   }
-  const active=subjectReviewFor(kind,kind==='contents'?contentState.course:extra.course);
+  const active=kind==='contents'?subjectReviewFor(kind,contentState.course):(subjectReviewSession?.kind===extra.mode&&subjectReviewSession.course===extra.course?subjectReviewSession:null);
   banner.hidden=!active;
   if(active){
    const unit=kind==='contents'?contentState.unit:extra.unit;
-   const prefix=kind==='contents'?`${active.course}/${unit}/`:`standardsStudy:${active.course}:${unit}:`;
+   const prefix=kind==='contents'?`${active.course}/${unit}/`:`${extra.mode}:${active.course}:${unit}:`;
    const unitKeys=Object.keys(active.targets).filter(k=>k.startsWith(prefix));
    const blanks=unitKeys.reduce((n,k)=>n+active.targets[k].length,0);
    banner.querySelector('.subject-review-banner-text').textContent=`오답 복습 · ${CONTENT_COURSES[active.course]} ${unit+1}단원 · 다시 풀 빈칸 ${blanks}개`;
@@ -2570,6 +2516,122 @@ function subjectShowCourseRetry(kind,course){
  };
 })();
 
+
+
+/* 단원 단위 재풀이 선택: 이미 채점한 오답만 따로 출제하거나 해당 단원만 초기화합니다. */
+function unitRetryWrongData(kind){
+ if(kind==='sequence'){
+  const attempted=state.pickSnapshot.length?state.pickSnapshot:state.picked;
+  return attempted.map((answer,i)=>answer===i?-1:i).filter(i=>i>=0);
+ }
+ if(kind==='contents'||(kind==='extra'&&extra.mode==='standardsStudy')){
+  const subjectKind=kind==='contents'?'contents':'standardsStudy';
+  const course=kind==='contents'?contentState.course:extra.course;
+  const unit=kind==='contents'?contentState.unit:extra.unit;
+  return subjectCourseQuestions(subjectKind,course).filter(row=>row.unit===unit&&row.done&&!row.correct);
+ }
+ // 성격 및 목표 / 교수·학습 및 평가 역시 현재 과목의 오답만 선별합니다.
+ const missed=[];
+ allExtraRows().forEach(row=>{
+  const ranges=maskRanges(row);
+  const full=extra.answers[row.id];
+  const graded=ranges.map((_,i)=>extra.answers[row.id+'/'+i]);
+  let indices=graded.map((entry,i)=>entry&&!entry.ok?i:-1).filter(i=>i>=0);
+  if(full&&!full.ok)indices=ranges.length?ranges.map((_,i)=>i):[0];
+  if(indices.length)missed.push({id:row.id,indices});
+ });
+ return missed;
+}
+function unitRetryAll(kind){
+ subjectReviewSession=null;
+ if(kind==='sequence'){
+  sequenceUnitRetry=null;
+  newUnit(state.unit);
+  return;
+ }
+ if(kind==='contents'){
+  const c=contentState.course,u=contentState.unit,prefix=`${c}/${u}/`;
+  for(const store of [contentState.answers,contentState.drafts,contentMaskResponses]){
+   for(const key of Object.keys(store))if(key.startsWith(prefix))delete store[key];
+  }
+  subjectCourseShown.delete('contents:'+c);
+  contentRevealAll=false;
+  contentEl('contentRevealBtn').textContent='전체 정답 확인';
+  saveContent();contentRender();contentScrollTop();
+  requestAnimationFrame(()=>subjectFocusUnitStart('contents'));
+  return;
+ }
+ const prefix=`${extra.mode}:${extra.course}:${extra.unit}:`;
+ for(const store of [extra.answers,extra.drafts]){
+  for(const key of Object.keys(store))if(key.startsWith(prefix))delete store[key];
+ }
+ if(extra.mode==='standardsStudy')subjectCourseShown.delete('standardsStudy:'+extra.course);
+ extraRevealAll=false;
+ renderExtra();
+ document.getElementById('extraPage').scrollTo({top:0,behavior:'instant'});
+ requestAnimationFrame(()=>subjectFocusUnitStart('standardsStudy'));
+}
+function unitRetryWrong(kind,wrong){
+ if(kind==='sequence'){
+  const unit=state.unit;
+  newUnit(unit);
+  sequenceUnitRetry={unit,indices:wrong};
+  state.shuffled=shuffledIndexes(wrong.length);
+  state.picked=[];state.pickSnapshot=[];state.graded=false;
+  render();
+  return;
+ }
+ if(kind==='contents'){
+  subjectStartReview('contents',contentState.course,wrong);
+  return;
+ }
+ if(extra.mode==='standardsStudy'){
+  subjectStartReview('standardsStudy',extra.course,wrong);
+  return;
+ }
+ const targets={};
+ wrong.forEach(row=>targets[row.id]=row.indices);
+ subjectReviewSession={kind:extra.mode,course:extra.course,targets,responses:{},units:[extra.unit]};
+ extra.mask=true;extra.edit=false;extraRevealAll=false;
+ renderExtra();subjectUpdateReviewBanner();
+ document.getElementById('extraPage').scrollTo({top:0,behavior:'instant'});
+ requestAnimationFrame(()=>subjectFocusUnitStart('standardsStudy'));
+}
+function showUnitRetryDialog(kind){
+ if(subjectActiveShade)return;
+ if(kind==='sequence'&&!state.graded)return;
+ const course=kind==='sequence'?state.course:kind==='contents'?contentState.course:extra.course;
+ const unit=kind==='sequence'?UNITS[state.unit].num:kind==='contents'?contentState.unit+1:extra.unit+1;
+ const page=document.getElementById(kind==='sequence'?'standardsPage':kind==='contents'?'contentPage':'extraPage');
+ const wrong=unitRetryWrongData(kind);
+ const name=kind==='sequence'?current().name:kind==='extra'&&extra.mode!=='standardsStudy'?EXTRA_MODES[extra.mode]:`${unit}단원`;
+ const lastFocus=document.activeElement;
+ const shade=document.createElement('div');shade.className='subject-finish-shade';
+ const dialog=document.createElement('div');dialog.className='subject-finish-dialog';
+ dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','이 단원 다시 풀기');
+ shade.append(dialog);page.append(shade);subjectActiveShade=shade;
+ const close=()=>{shade.remove();if(subjectActiveShade===shade)subjectActiveShade=null;lastFocus?.focus?.({preventScroll:true});};
+ shade.addEventListener('click',event=>{if(event.target===shade)close();});
+ shade.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();close();}});
+ dialog.append(subjectText('p','subject-finish-kicker',(kind==='sequence'?COURSES[course]:CONTENT_COURSES[course])+' · '+name));
+ dialog.append(subjectText('h2','','이 단원 다시 풀기'));
+ dialog.append(subjectText('p','subject-finish-sub','다시 풀 방법을 선택하세요. 기존에 맞힌 문제는 오답 복습에서 제외됩니다.'));
+ const stats=document.createElement('div');stats.className='subject-finish-stats';stats.style.gridTemplateColumns='repeat(2,minmax(0,1fr))';
+ const allCount=kind==='sequence'?UNITS[state.unit].items.length:kind==='contents'?contentUnitsOf(course)[contentState.unit]&&contentItems().length:kind==='extra'?allExtraRows().length:0;
+ [['전체 문제',allCount],['다시 풀 오답',wrong.length]].forEach(([label,value])=>{
+  const stat=document.createElement('div');stat.className='subject-finish-stat';
+  stat.append(subjectText('strong','',String(value)),subjectText('span','',label));stats.append(stat);
+ });
+ dialog.append(stats);
+ const actions=document.createElement('div');actions.className='subject-finish-actions';
+ actions.append(subjectButton('취소',close));
+ actions.append(subjectButton('처음부터 모두 풀기',()=>{close();unitRetryAll(kind);},true));
+ const wrongButton=subjectButton('틀린 것만 풀기',()=>{close();unitRetryWrong(kind,wrong);});
+ if(!wrong.length){wrongButton.disabled=true;wrongButton.title='채점된 오답이 없습니다';}
+ actions.append(wrongButton);dialog.append(actions);
+ if(!wrong.length)dialog.append(subjectText('p','subject-finish-sub','채점된 오답이 없어 틀린 것만 풀기는 선택할 수 없습니다.'));
+ requestAnimationFrame(()=>actions.querySelector('button.primary')?.focus({preventScroll:true}));
+}
 
 /* Independent saved-key editor and portable share-code exchange (version 1). */
 (function(){
@@ -2782,7 +2844,7 @@ function subjectShowCourseRetry(kind,course){
  transfer.addEventListener('click',e=>{if(e.target===transfer)closeTransfer()});
  window.openSavedKeyEditor=openSavedKeyEditor;window.openKeywordTransfer=openKeywordTransfer;
  // S Pen barrel events may be reported as button=2, but Air Actions are not available to plain browser JS.
- const enterButton=byId('spenEnterFallback');let lastBarrelAt=0,lastPenTapAt=0;
+ const enterButton=byId('spenEnterFallback');let lastBarrelAt=0;
  function studyField(){
   const selectors=byId('contentPage').classList.contains('hidden')
    ?(byId('extraPage').classList.contains('hidden')?null:(extra.edit?null:'.inline-blank,textarea.extra-input'))
@@ -2790,17 +2852,14 @@ function subjectShowCourseRetry(kind,course){
   if(!selectors)return null;
   const page=byId('contentPage').classList.contains('hidden')?byId('extraPage'):byId('contentPage');
   const fields=[...page.querySelectorAll(selectors)].filter(el=>!el.disabled&&el.offsetWidth>0&&el.offsetHeight>0);
-  return fields.find(el=>el===document.activeElement)||fields.find(el=>el===studyPendingField)||fields[0]||null;
+  return fields.find(el=>el===document.activeElement)||fields[0]||null;
  }
  function runStudyEnter(){
   if(!byId('keywordKeyEditor').hidden||!byId('keywordTransferModal').hidden||!byId('keywordProfileModal').hidden||!byId('keywordListModal').hidden||!byId('answerEditModal').hidden)return;
   const field=studyField();if(!field)return;
-  if(STUDY_TOUCH_DEVICE)studyCloseSoftKeyboard();
-   else if(document.activeElement!==field)field.focus({preventScroll:true});
+  if(document.activeElement!==field)field.focus({preventScroll:true});
   const event=new KeyboardEvent('keydown',{key:'Enter',code:'Enter',bubbles:true,cancelable:true});field.dispatchEvent(event);
  }
- // Android WebView calls this for physical S Pen side-button and Air Actions events.
- window.studyAppNativeEnter=()=>runStudyEnter();
  function barrelInput(e){
   if(e.pointerType!=='pen')return;
   if(e.button!==2 && !(e.buttons&2))return;
@@ -2815,21 +2874,9 @@ function subjectShowCourseRetry(kind,course){
   if(Date.now()-lastBarrelAt>350){lastBarrelAt=Date.now();runStudyEnter();}
   e.preventDefault();
  },true);
- // A pen tap often synthesizes click, but some WebViews send only pointerup.
-  // Deduplicate the two events to avoid grading twice.
-  enterButton.addEventListener('pointerup',e=>{
-   if(e.pointerType!=='pen')return;
-   e.preventDefault();lastPenTapAt=Date.now();runStudyEnter();
-  });
-  enterButton.addEventListener('click',()=>{
-   if(Date.now()-lastPenTapAt<380)return;
-   runStudyEnter();
-  });
-  enterButton.addEventListener('pointerdown',e=>{
-   if(e.pointerType==='pen'||e.pointerType==='touch')studyCloseSoftKeyboard();
-  });
+ enterButton.onclick=runStudyEnter;
  function refreshEnterButton(){
-  const tablet=STUDY_TOUCH_DEVICE || window.matchMedia('(any-pointer:coarse) and (min-width:650px)').matches;
+  const tablet=window.matchMedia('(any-pointer:coarse) and (min-width:650px)').matches;
   const visible=tablet&&( !byId('contentPage').classList.contains('hidden')&&byId('contentSettingsOverlay').hidden || !byId('extraPage').classList.contains('hidden')&&!extra.edit );
   enterButton.hidden=!visible;
  }
