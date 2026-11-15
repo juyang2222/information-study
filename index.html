@@ -819,6 +819,10 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
  .content-mask-sentence .inline-answer,
  .extra-mask-sentence .inline-answer{margin-left:8px;margin-right:8px;}
 }
+@media(max-width:760px){
+ #spenEnterFallback{right:9px;min-height:44px;padding:10px 14px;font-size:12px;max-width:calc(100vw - 18px);white-space:nowrap}
+ #contentPage,#extraPage{padding-bottom:94px}
+}
 </style></head><body>
 <nav class="mode-switch" id="modeSwitch" aria-label="학습 모드 선택"><a class="brand" id="brandHome" href="#contents" aria-label="정보과 교육과정 처음 화면으로 이동">정보과 교육과정</a>
 <button type="button" id="modeContent" class="active">내용체계표 공부</button>
@@ -983,7 +987,7 @@ body.content-focus-mode #contentStudyPicker,#contentPage:fullscreen #contentStud
   <div class="key-transfer-footer"><span class="key-transfer-status" role="status" id="keywordTransferStatus"></span><button type="button" class="btn" id="keywordTransferCancel">닫기</button><button type="button" class="btn primary" id="keywordTransferAction">코드 복사</button></div>
  </div>
 </div>
-<button id="spenEnterFallback" type="button" hidden title="S펜 측면 버튼 신호를 브라우저가 전달하지 않을 때 이 버튼을 사용하세요" aria-label="현재 답안 채점 후 다음 칸으로 이동">↵ 채점 · 다음 칸</button>
+<button id="spenEnterFallback" type="button" hidden title="휴대폰·태블릿에서 현재 답안을 채점하고 다음 입력칸으로 이동합니다" aria-label="현재 답안 채점 후 다음 칸으로 이동">↵ 채점 · 다음 칸</button>
 
 <div id="answerEditModal" role="dialog" aria-modal="true" aria-label="답안수정" hidden>
   <div class="answer-edit-dialog">
@@ -1260,7 +1264,7 @@ function contentRenderTable(){
       const box=document.createElement('div');box.className='table-answer-item'+(entry?(entry.correct?' is-right':' is-wrong'):'');box.dataset.question=String(qid);
       const line=document.createElement('div');line.className='table-input-line';
       const no=document.createElement('span');no.className='table-bullet';no.textContent=t==='T'?'↳':String(i+1).padStart(2,'0');line.append(no);
-      const input=document.createElement('textarea');input.rows=1;input.spellcheck=false;input.className='table-input';input.dataset.question=String(qid);
+      const input=document.createElement('textarea');input.rows=1;input.spellcheck=false;input.className='table-input';input.enterKeyHint='next';input.dataset.question=String(qid);
       input.setAttribute('aria-label',`${CONTENT_LABELS[t]} ${i+1}번째 답안`);
       input.placeholder=t==='T'?'단원명을 정확히 쓰세요':t==='K'?'전체 문구를 정확히 쓰세요':'강조 키워드가 들어가도록 적으세요';
       input.value=entry?entry.answer:(contentState.drafts[key]||'');
@@ -1291,7 +1295,8 @@ function contentGradeItem(qid,moveNext){
   const item=field.closest('.table-answer-item');item.classList.toggle('is-right',correct);item.classList.toggle('is-wrong',!correct);contentUpdateProgress();setTimeout(()=>subjectCourseCheck('contents',contentState.course),85);
   if(moveNext){const inputs=[...contentEl('contentTableBody').querySelectorAll('textarea')],pos=inputs.indexOf(field);
     const next=inputs.slice(pos+1).find(el=>!contentState.answers[contentId(contentState.course,contentState.unit,Number(el.dataset.question))]);
-    if(next)requestAnimationFrame(()=>{next.focus({preventScroll:true});next.scrollIntoView({behavior:'smooth',block:'center'});});
+    if(next){const focusNext=()=>{next.focus({preventScroll:true});next.scrollIntoView({behavior:'smooth',block:'center'});};
+      if(window.matchMedia('(any-pointer:coarse) and (max-width:760px)').matches)focusNext();else requestAnimationFrame(focusNext);}
     else if(previouslyGraded)field.blur(); // 마지막 칸은 유지합니다.
     else field.focus();
   }
@@ -1302,6 +1307,7 @@ function contentNextUnit(dir){
  else if(at<0&&c>0){contentState.course--;contentState.unit=contentUnitsOf(contentState.course).length-1;}
  else return;
  contentRender();contentScrollTop();
+  if(window.matchMedia('(pointer:coarse) and (max-width:760px)').matches)subjectFocusUnitStart('contents');
 }
 function contentScrollTop(){const main=contentEl('contentMain');if(document.fullscreenElement===contentEl('contentPage')){contentEl('contentPage').scrollTop=0;}else{const y=main.getBoundingClientRect().top+window.scrollY-12;window.scrollTo({top:Math.max(y,0),behavior:'instant'});}}
 function contentRender(){contentRenderNav();contentRenderTable();if(typeof contentRenderReference==='function')contentRenderReference();}
@@ -1652,6 +1658,7 @@ function extraChange(delta){
  else if(n>=count&&extra.course<CONTENT_COURSES.length-1){extra.course++;extra.unit=0;}
  else return;
  renderExtra();eGet('extraPage').scrollTo({top:0,behavior:'instant'});
+  if(window.matchMedia('(pointer:coarse) and (max-width:760px)').matches)subjectFocusUnitStart('standardsStudy');
 }
 function extraChangeCourse(delta){const c=extra.course+delta;if(c<0||c>=CONTENT_COURSES.length)return;extra.course=c;extra.unit=0;renderExtra();}
 function extraSelectCourse(c){extra.course=c;extra.unit=0;renderExtra();closeExtraToc()}
@@ -1690,7 +1697,7 @@ function maskInputRow(row){
    const existing=review?review.responses[key]:(extra.answers[key]||(extraRevealAll?{ok:true,value:word,reveal:true}:null));
   const holder=document.createElement('span');holder.className='inline-answer'+(existing?(existing.ok?' correct':' incorrect'):'');
   if(existing){const reveal=document.createElement('span');reveal.className='inline-revealed';reveal.textContent=word;reveal.title=existing.ok?'정답':'입력: '+existing.value;holder.append(reveal);if(!existing.reveal){const reset=document.createElement('button');reset.type='button';reset.className='inline-reset';reset.textContent='↻';reset.setAttribute('aria-label','다시 입력');reset.onclick=()=>{if(review)delete review.responses[key];else delete extra.answers[key];renderExtraTable()};holder.append(reset);}}
-  else{const inp=document.createElement('input');inp.type='text';inp.className='inline-blank';inp.style.width=`${Math.max(88,Math.min(240,word.length*17+35))}px`;inp.setAttribute('aria-label','키워드 '+(ki+1));inp.autocomplete='off';inp.spellcheck=false;inp.value=extra.drafts[key]||'';
+  else{const inp=document.createElement('input');inp.type='text';inp.enterKeyHint='next';inp.className='inline-blank';inp.style.width=`${Math.max(88,Math.min(240,word.length*17+35))}px`;inp.setAttribute('aria-label','키워드 '+(ki+1));inp.autocomplete='off';inp.spellcheck=false;inp.value=extra.drafts[key]||'';
     inp.addEventListener('input',()=>extra.drafts[key]=inp.value);
     inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();gradeExtraKeyword(row,ki,inp.value,word);}});
     holder.append(inp);
@@ -1718,9 +1725,9 @@ function fullRow(row){
    if(codes){const label=document.createElement('div');label.className='extra-criterion-code';label.textContent=codes[1].trim();box.append(label);}
   }
  }
- const field=document.createElement('textarea');field.rows=2;field.className='extra-input';field.placeholder='정답을 입력하고 Enter';field.value=extra.drafts[row.id]||'';field.spellcheck=false;field.dataset.rowId=row.id;
+ const field=document.createElement('textarea');field.rows=2;field.enterKeyHint='next';field.className='extra-input';field.placeholder='정답을 입력하고 Enter';field.value=extra.drafts[row.id]||'';field.spellcheck=false;field.dataset.rowId=row.id;
  field.addEventListener('input',()=>{extra.drafts[row.id]=field.value;delete extra.answers[row.id];const host=box.querySelector('.extra-full-feedback');host.innerHTML='';});
- field.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();let correct=getExtraRange(row.id,row.raw).map(([s,t])=>row.raw.slice(s,t));if(!correct.length)correct=[row.raw];const ok=!!eNorm(field.value)&&correct.every(w=>eNorm(field.value).includes(eNorm(w)));extra.answers[row.id]={ok,value:field.value};showFeedback();if(extra.mode==='standardsStudy')setTimeout(()=>subjectCourseCheck('standardsStudy',extra.course),85);const fields=[...eGet('extraTable').querySelectorAll('textarea.extra-input')],pos=fields.indexOf(field);const next=fields.slice(pos+1).find(f=>!extra.answers[f.dataset.rowId]);if(next)requestAnimationFrame(()=>{next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'});});}});
+ field.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();let correct=getExtraRange(row.id,row.raw).map(([s,t])=>row.raw.slice(s,t));if(!correct.length)correct=[row.raw];const ok=!!eNorm(field.value)&&correct.every(w=>eNorm(field.value).includes(eNorm(w)));extra.answers[row.id]={ok,value:field.value};showFeedback();if(extra.mode==='standardsStudy')setTimeout(()=>subjectCourseCheck('standardsStudy',extra.course),85);const fields=[...eGet('extraTable').querySelectorAll('textarea.extra-input')],pos=fields.indexOf(field);const next=fields.slice(pos+1).find(f=>!extra.answers[f.dataset.rowId]);if(next){const focusNext=()=>{next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'});};if(window.matchMedia('(any-pointer:coarse) and (max-width:760px)').matches)focusNext();else requestAnimationFrame(focusNext);}}});
  const host=document.createElement('div');host.className='extra-full-feedback';box.append(field,host);
  function showFeedback(){const a=extra.answers[row.id];if(!a)return;const all=getExtraRange(row.id,row.raw);host.innerHTML=`<div class="extra-status ${a.ok?'good':'bad'}">${a.ok?'✓ 정답':'✕ 오답'}</div><div class="extra-correct-text">${rangesMarkup(row.raw,all,(s)=>`<strong class="${eNorm(a.value).includes(eNorm(s))?'good':'bad'}">${eEsc(s)}</strong>`)}</div>`;}
  showFeedback();if(extraRevealAll&&!extra.answers[row.id]){host.textContent="정답 · "+row.raw;host.classList.add("all-reveal-text");}return box;
@@ -1807,7 +1814,7 @@ function makeContentMaskTable(){
      const existing=review?review.responses[key]:contentMaskResponses[key];
      const holder=document.createElement('span');holder.className='inline-answer'+(existing?(existing.ok?' correct':' incorrect'):'');holder.dataset.maskKey=key;
     if(existing||(!review&&contentRevealAll)){const fixed=document.createElement('span');fixed.className='inline-revealed';fixed.textContent=kw;fixed.title=(!existing||existing.ok)?'정답':'오답: '+existing.answer;holder.classList.add(!existing||existing.ok?'correct':'incorrect');holder.append(fixed);if(existing){const reset=document.createElement('button');reset.type='button';reset.className='inline-reset';reset.textContent='↻';reset.onclick=()=>{if(review)delete review.responses[key];else delete contentMaskResponses[key];makeContentMaskTable()};holder.append(reset);}}
-    else{const inp=document.createElement('input');inp.type='text';inp.autocomplete='off';inp.spellcheck=false;inp.className='inline-blank';inp.placeholder='____';inp.setAttribute('aria-label',`${CONTENT_LABELS[t]} 키워드 ${k+1}`);inp.style.width=Math.max(90,Math.min(240,kw.length*17+35))+'px';
+    else{const inp=document.createElement('input');inp.type='text';inp.autocomplete='off';inp.spellcheck=false;inp.enterKeyHint='next';inp.className='inline-blank';inp.placeholder='____';inp.setAttribute('aria-label',`${CONTENT_LABELS[t]} 키워드 ${k+1}`);inp.style.width=Math.max(90,Math.min(240,kw.length*17+35))+'px';
       inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();if(review)review.responses[key]={ok:eNorm(inp.value)===eNorm(kw),answer:inp.value};else contentMaskResponses[key]={ok:eNorm(inp.value)===eNorm(kw),answer:inp.value};makeContentMaskTable();if(!review)setTimeout(()=>subjectCourseCheck('contents',contentState.course),85);const holders=[...root.querySelectorAll('.inline-answer')];const currentIndex=holders.findIndex(x=>x.dataset.maskKey===key);const next=holders.slice(currentIndex+1).map(x=>x.querySelector('input.inline-blank')).find(Boolean);if(next){next.focus({preventScroll:true});next.scrollIntoView({block:'center',behavior:'smooth'})};}});
       holder.append(inp);
     }sentence.append(holder);pos=end;
@@ -2558,7 +2565,8 @@ function unitRetryAll(kind){
   contentRevealAll=false;
   contentEl('contentRevealBtn').textContent='전체 정답 확인';
   saveContent();contentRender();contentScrollTop();
-  requestAnimationFrame(()=>subjectFocusUnitStart('contents'));
+  // 버튼 터치 이벤트 안에서 바로 포커스: 모바일에서 키보드 표시를 막는 지연을 피함.
+  subjectFocusUnitStart('contents');
   return;
  }
  const prefix=`${extra.mode}:${extra.course}:${extra.unit}:`;
@@ -2569,7 +2577,7 @@ function unitRetryAll(kind){
  extraRevealAll=false;
  renderExtra();
  document.getElementById('extraPage').scrollTo({top:0,behavior:'instant'});
- requestAnimationFrame(()=>subjectFocusUnitStart('standardsStudy'));
+ subjectFocusUnitStart('standardsStudy');
 }
 function unitRetryWrong(kind,wrong){
  if(kind==='sequence'){
@@ -2583,10 +2591,12 @@ function unitRetryWrong(kind,wrong){
  }
  if(kind==='contents'){
   subjectStartReview('contents',contentState.course,wrong);
+  subjectFocusUnitStart('contents');
   return;
  }
  if(extra.mode==='standardsStudy'){
   subjectStartReview('standardsStudy',extra.course,wrong);
+  subjectFocusUnitStart('standardsStudy');
   return;
  }
  const targets={};
@@ -2595,7 +2605,7 @@ function unitRetryWrong(kind,wrong){
  extra.mask=true;extra.edit=false;extraRevealAll=false;
  renderExtra();subjectUpdateReviewBanner();
  document.getElementById('extraPage').scrollTo({top:0,behavior:'instant'});
- requestAnimationFrame(()=>subjectFocusUnitStart('standardsStudy'));
+ subjectFocusUnitStart('standardsStudy');
 }
 function showUnitRetryDialog(kind){
  if(subjectActiveShade)return;
@@ -2843,8 +2853,21 @@ function showUnitRetryDialog(kind){
  byId('keywordTransferClose').onclick=byId('keywordTransferCancel').onclick=closeTransfer;
  transfer.addEventListener('click',e=>{if(e.target===transfer)closeTransfer()});
  window.openSavedKeyEditor=openSavedKeyEditor;window.openKeywordTransfer=openKeywordTransfer;
+ // Some mobile keyboards emit a line-break input event rather than a regular Enter keydown.
+ document.addEventListener('beforeinput',event=>{
+  if(event.isComposing||!['insertLineBreak','insertParagraph'].includes(event.inputType))return;
+  if(!window.matchMedia('(any-pointer:coarse) and (max-width:760px)').matches)return;
+  const field=event.target;
+  if(!field?.matches?.('#contentTableBody .inline-blank, #contentTableBody textarea.table-input, #extraTable .inline-blank, #extraTable textarea.extra-input'))return;
+  event.preventDefault();
+  field.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',code:'Enter',bubbles:true,cancelable:true}));
+ },true);
  // S Pen barrel events may be reported as button=2, but Air Actions are not available to plain browser JS.
  const enterButton=byId('spenEnterFallback');let lastBarrelAt=0;
+ let recentStudyField=null;
+ document.addEventListener('focusin',event=>{
+  if(event.target?.matches?.('#contentTableBody .inline-blank, #contentTableBody textarea.table-input, #extraTable .inline-blank, #extraTable textarea.extra-input'))recentStudyField=event.target;
+ },true);
  function studyField(){
   const selectors=byId('contentPage').classList.contains('hidden')
    ?(byId('extraPage').classList.contains('hidden')?null:(extra.edit?null:'.inline-blank,textarea.extra-input'))
@@ -2852,7 +2875,7 @@ function showUnitRetryDialog(kind){
   if(!selectors)return null;
   const page=byId('contentPage').classList.contains('hidden')?byId('extraPage'):byId('contentPage');
   const fields=[...page.querySelectorAll(selectors)].filter(el=>!el.disabled&&el.offsetWidth>0&&el.offsetHeight>0);
-  return fields.find(el=>el===document.activeElement)||fields[0]||null;
+  return fields.find(el=>el===document.activeElement)||fields.find(el=>el===recentStudyField)||fields[0]||null;
  }
  function runStudyEnter(){
   if(!byId('keywordKeyEditor').hidden||!byId('keywordTransferModal').hidden||!byId('keywordProfileModal').hidden||!byId('keywordListModal').hidden||!byId('answerEditModal').hidden)return;
@@ -2874,12 +2897,45 @@ function showUnitRetryDialog(kind){
   if(Date.now()-lastBarrelAt>350){lastBarrelAt=Date.now();runStudyEnter();}
   e.preventDefault();
  },true);
- enterButton.onclick=runStudyEnter;
- function refreshEnterButton(){
-  const tablet=window.matchMedia('(any-pointer:coarse) and (min-width:650px)').matches;
-  const visible=tablet&&( !byId('contentPage').classList.contains('hidden')&&byId('contentSettingsOverlay').hidden || !byId('extraPage').classList.contains('hidden')&&!extra.edit );
-  enterButton.hidden=!visible;
+ // On phones, touching a button can blur the input and close the keyboard.
+ // Handle touch within the same user gesture and avoid the duplicate click.
+ let recentTouchEnter=0;
+ enterButton.addEventListener('pointerdown',event=>{
+  if(event.pointerType!=='touch')return;
+  event.preventDefault();
+  recentTouchEnter=Date.now();
+  runStudyEnter();
+ });
+ enterButton.addEventListener('click',()=>{
+  if(Date.now()-recentTouchEnter<650)return;
+  runStudyEnter();
+ });
+ function positionEnterButton(){
+  if(enterButton.hidden){enterButton.style.bottom='';return;}
+  const vv=window.visualViewport;
+  if(!vv){enterButton.style.bottom='';return;}
+  // iOS Safari keeps the layout viewport tall while the keyboard is open.
+  const keyboardOverlap=Math.max(0,Math.round(window.innerHeight-vv.height-vv.offsetTop));
+  enterButton.style.bottom=`calc(${keyboardOverlap+12}px + env(safe-area-inset-bottom))`;
  }
+ function refreshEnterButton(){
+  // The original min-width:650px constraint made the button tablet-only.
+  const touch=window.matchMedia('(any-pointer:coarse)').matches||navigator.maxTouchPoints>0;
+  const visible=touch&&( !byId('contentPage').classList.contains('hidden')&&byId('contentSettingsOverlay').hidden || !byId('extraPage').classList.contains('hidden')&&!extra.edit );
+  enterButton.hidden=!visible;
+  positionEnterButton();
+ }
+ // A true fullscreen element hides siblings outside its top layer.
+ const enterHome=enterButton.parentNode;
+ const enterHomeNext=enterButton.nextSibling;
+ document.addEventListener('fullscreenchange',()=>{
+  const full=document.fullscreenElement;
+  if(full===byId('contentPage')||full===byId('extraPage'))full.append(enterButton);
+  else if(enterButton.parentNode!==enterHome)enterHome.insertBefore(enterButton,enterHomeNext);
+  refreshEnterButton();
+ });
+ window.visualViewport?.addEventListener('resize',positionEnterButton);
+ window.visualViewport?.addEventListener('scroll',positionEnterButton);
  const modeObserver=new MutationObserver(refreshEnterButton);
  for(const node of [byId('contentPage'),byId('extraPage'),byId('contentSettingsOverlay')])modeObserver.observe(node,{attributes:true,attributeFilter:['class','hidden']});
  window.addEventListener('resize',refreshEnterButton);refreshEnterButton();
